@@ -1,0 +1,325 @@
+.container {
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    background: #0f172a;
+
+    color: white;
+    font-family: system-ui, sans-serif;
+
+    overflow-x: hidden;
+}
+
+/* Heading */
+
+.heading {
+    text-align: center;
+}
+
+.heading h1 {
+    font-size: clamp(1rem, 6vw, 2rem);
+    font-weight: 900;
+    margin-bottom: 0.4rem;
+    letter-spacing: -2px;
+}
+
+.heading p {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+/* Stats */
+
+.statsPanel {
+    width: 100%;
+    max-width: 700px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    /* gap: 1rem; */
+}
+
+.statItem {
+    background: #111827;
+
+    border: 1px solid #1e293b;
+
+    border-radius: 8px;
+
+    padding: 1rem;
+
+    text-align: center;
+
+    transition: 0.2s ease;
+}
+
+.statItem:hover {
+    transform: translateY(-3px);
+}
+
+.label {
+    display: block;
+
+    font-size: 0.75rem;
+
+    text-transform: uppercase;
+
+    color: #94a3b8;
+
+    margin-bottom: 6px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.value {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+/* Game Box */
+
+.gameBox {
+    width: 100%;
+    max-width: 500px;
+
+    min-height: 300px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2rem;
+
+    text-align: center;
+
+    transition:
+        transform 0.15s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+
+    background: #111827;
+
+    border: 1px solid #1e293b;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.gameBox:hover {
+    transform: translateY(-4px);
+}
+
+.gameBox:active {
+    transform: scale(0.98);
+}
+
+.content {
+    width: 100%;
+}
+
+.title {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+
+    font-weight: 900;
+
+    margin-bottom: 1rem;
+}
+
+.message {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+.reactionTime {
+    margin-top: 1rem;
+
+    font-size: clamp(2rem, 7vw, 4rem);
+
+    font-weight: 900;
+}
+
+/* States */
+
+.waiting {
+    background: #7f1d1d;
+}
+
+.ready {
+    background: #16a34a;
+
+    box-shadow:
+        0 0 40px rgba(22, 163, 74, 0.4);
+
+    animation: pulse 1s infinite;
+}
+
+.clicked {
+    background: #1d4ed8;
+}
+
+/* Leaderboard */
+
+.leaderboardSection {
+    width: 100%;
+    max-width: 850px;
+
+    background: #111827;
+
+    border: 1px solid #1e293b;
+
+    border-radius: 24px;
+
+    padding: 1.5rem;
+}
+
+.lbTitle {
+    font-size: 1.1rem;
+
+    font-weight: 800;
+
+    margin-bottom: 1rem;
+}
+
+.scoreRow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding: 1rem;
+
+    border-radius: 16px;
+
+    background: #0f172a;
+
+    margin-bottom: 0.8rem;
+
+    transition: 0.2s ease;
+}
+
+.scoreRow:hover {
+    background: #172033;
+}
+
+.rank {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    background: #2563eb;
+
+    font-weight: 800;
+}
+
+.time {
+    font-size: 1.1rem;
+
+    font-weight: 800;
+
+    font-family: monospace;
+}
+
+.date {
+    color: #94a3b8;
+
+    font-size: 0.85rem;
+}
+
+.empty {
+    color: #94a3b8;
+}
+
+/* Animations */
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.015);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+    .statsPanel {
+        grid-template-columns: 1fr;
+    }
+
+    .gameBox {
+        min-height: 280px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+    .container {
+        padding: 16px;
+        gap: 1.5rem;
+    }
+
+    .gameBox {
+        min-height: 240px;
+
+        border-radius: 22px;
+
+        padding: 1.5rem;
+    }
+
+    .leaderboardSection {
+        padding: 1rem;
+    }
+
+    .scoreRow {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+}
+
+/* Tiny Phones */
+
+@media (max-width: 320px) {
+    .title {
+        font-size: 1.4rem;
+    }
+
+    .message {
+        font-size: 0.9rem;
+    }
+
+    .reactionTime {
+        font-size: 2rem;
+    }
+}

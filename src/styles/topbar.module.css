@@ -1,0 +1,409 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+   background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.96),
+    rgba(2, 6, 23, 0.98)
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  padding: 0.75rem 1.25rem;
+
+
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* LEFT */
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menuBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display:none;
+}
+
+.menuBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* LEVEL BOX */
+.levelBox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  padding: 0.45rem 0.9rem;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+
+  backdrop-filter: blur(10px);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(59, 130, 246, 0.7);
+  background: #1e293b;
+}
+
+.levelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.levelText {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #e2e8f0;
+}
+
+.progressBar {
+  width: 90px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+/* RIGHT */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* CURRENCY */
+.currency {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  padding: 0.35rem 0.7rem;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 10px;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* ICON COLORS */
+.currency svg[data-lucide="coins"] {
+  color: #facc15;
+}
+
+.currency svg[data-lucide="gem"] {
+  color: #34d399;
+}
+
+/* PRIMARY BUTTON */
+.btn.primary {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+
+  color: white;
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 14px rgba(34, 197, 94, 0.25);
+
+  transition: transform 0.15s ease;
+}
+
+.btn.primary:hover {
+  transform: translateY(-1px);
+}
+
+/* ICON BUTTONS */
+.iconBtn {
+  position: relative;
+
+  background: transparent;
+  border: none;
+
+  color: rgba(226, 232, 240, 0.7);
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.iconBtn:hover {
+  color: white;
+}
+
+/* NOTIFICATION DOT */
+.dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+
+  width: 7px;
+  height: 7px;
+
+  background: #ef4444;
+  border-radius: 50%;
+
+  border: 2px solid rgba(15, 23, 42, 0.85);
+}
+
+/* SEARCH */
+.searchBox {
+  display: flex;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 10px;
+
+  padding: 0 0.4rem;
+
+  transition: all 0.25s ease;
+}
+
+.searchInput {
+  width: 0;
+  opacity: 0;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: white;
+
+  font-size: 0.85rem;
+
+  transition: all 0.25s ease;
+}
+
+.searchBox.open {
+  width: 220px;
+}
+
+.searchBox.open .searchInput {
+  width: 160px;
+  opacity: 1;
+}
+
+/* DECOR LINE */
+.sparkLine {
+  height: 1px;
+  margin-top: 0.6rem;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.6),
+    transparent
+  );
+
+  opacity: 0.6;
+}
+
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* PROFILE BLOCK */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  padding: 0.45rem 0.75rem;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+
+  transition: all 0.25s ease;
+}
+
+.profile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(120, 180, 255, 0.4);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* AVATAR */
+.avatarWrap {
+  position: relative;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  border: 2px solid rgba(120, 180, 255, 0.6);
+}
+
+/* ONLINE DOT */
+.onlineDot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+
+  width: 9px;
+  height: 9px;
+
+  background: #2cff7a;
+  border-radius: 50%;
+  border: 2px solid #0f1c2e;
+
+  box-shadow: 0 0 8px #2cff7a;
+}
+
+/* META */
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* XP BAR */
+.progress {
+  width: 110px;
+  height: 5px;
+
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fill {
+  width: 60%;
+  height: 100%;
+
+  background: linear-gradient(90deg, #4da3ff, #7c5cff);
+  box-shadow: 0 0 10px rgba(124, 92, 255, 0.6);
+}
+
+/* SHARED PILL */
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+
+  transition: 0.25s ease;
+}
+
+.pill:hover {
+  transform: translateY(-2px);
+  border-color: rgba(120, 180, 255, 0.4);
+}
+
+/* LANGUAGE */
+.langPill {
+  min-width: 140px;
+}
+
+.icon {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* SELECT */
+.select {
+  appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.select option {
+  background: #0f1c2e;
+  color: #fff;
+}
+
+/* PROFILE BUTTON */
+.profileBtn {
+  width: 42px;
+  height: 42px;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.profileBtn svg {
+  color: #fff;
+  transition: 0.25s ease;
+}
+
+.profileBtn:hover svg {
+  color: #7c5cff;
+  filter: drop-shadow(0 0 6px rgba(124, 92, 255, 0.7));
+}
