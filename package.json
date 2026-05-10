@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@netlify/plugin-nextjs": "^5.15.11",
     "@richaadgigi/stylexui": "^2.0.16",
     "an-array-of-english-words": "^2.0.0",
     "lucide-react": "^1.8.0",
