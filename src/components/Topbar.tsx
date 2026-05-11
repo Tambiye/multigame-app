@@ -1,20 +1,60 @@
+
 'use client'
 
+import NextLink from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useLayout } from '@/context/LayoutContext'
-import { Menu, Search, Globe, CircleUser } from 'lucide-react'
+import {
+  Menu,
+  LayoutDashboard,
+  Search,
+  Globe,
+  CircleUser,
+} from 'lucide-react'
+
 import styles from '@/styles/topbar.module.css'
 import { useState } from 'react'
 
 export default function Topbar() {
   const { toggleSidebar } = useLayout()
   const [searchOpen, setSearchOpen] = useState(false)
+  const navItems = [
+    { name: 'Games', icon: LayoutDashboard, path: '/' },
+
+   
+  ]
+  const pathname = usePathname()
 
   return (
     <header className={styles.topbar}>
       <div className={styles.inner}>
+          <nav className={styles.nav}>
+  {navItems.map((item) => {
+    const Icon = item.icon
+    const isActive = pathname === item.path
+
+    return (
+      <NextLink
+        key={item.name}
+        href={item.path}
+        className={`${styles.navItem} ${
+          isActive ? styles.active : ''
+        }`}
+      >
+        <Icon size={20} />
+
+        <span className={styles.navText}>
+          {item.name}
+        </span>
+      </NextLink>
+    )
+  })}
+</nav>
 
         {/* RIGHT */}
         <div className={styles.right}>
+
+
           {/* <div className={`${styles.search} ${searchOpen ? styles.open : ''}`}>
             <button
               type="button"
