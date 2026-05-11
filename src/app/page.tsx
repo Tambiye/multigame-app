@@ -15,7 +15,7 @@ const games = [
     href: "/games/WordWizard",
     badge: "Vocabulary",
     description:
-      "Turn letters into powerful words, build streaks, and rise through the ranks of the ultimate word master.",
+      "Build words from letters, grow streaks, and master vocabulary skills.",
     icon: WandSparkles,
   },
   {
@@ -23,7 +23,7 @@ const games = [
     href: "/games/math-quiz",
     badge: "Brain Boost",
     description:
-      "Push your mind to the limit with fast-paced math challenges, score multipliers, and survival-based gameplay.",
+      "Solve fast math challenges, earn points, and test mental speed.",
     icon: Brain,
   },
   {
@@ -31,7 +31,7 @@ const games = [
     href: "/games/reaction-game",
     badge: "Speed Test",
     description:
-      "Challenge your reflexes, react in milliseconds, and see how fast your mind and hands really are.",
+      "Test reflex speed, react quickly, and improve timing under pressure.",
     icon: Zap,
   },
   {
@@ -39,7 +39,7 @@ const games = [
     href: "/games/memory-match",
     badge: "Focus",
     description:
-      "Flip, memorize, and match every card while racing against time and sharpening your concentration.",
+      "Flip cards, remember positions, and match pairs against the clock.",
     icon: Layers3,
   },
   {
@@ -47,7 +47,7 @@ const games = [
     href: "/games/word-builder",
     badge: "Puzzle",
     description:
-      "Unscramble hidden words, expand your vocabulary, and solve increasingly tricky word combinations.",
+      "Unscramble letters, find words, and solve tricky vocabulary puzzles.",
     icon: Sigma,
   },
 ];
@@ -58,19 +58,9 @@ export default function Home() {
       <div className="container">
         <section className="hero-stack">
           <div className="hero-badge">
-            <Sparkles size={16} />
-            <span>Interactive Learning Games</span>
+            <Sparkles size={20} />
+            <span>Featured Games</span>
           </div>
-
-          {/* <h1 className="heading-hero">
-            Play Smarter.
-            <br />
-            Learn Faster.
-          </h1> */}
-{/* 
-          <p className="text-muted hero-text">
-  Fun mini-games built to sharpen your mind, improve reflexes, and make learning enjoyable.
-</p> */}
         </section>
 
         <section className="grid-auto-fit">
