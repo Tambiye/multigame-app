@@ -28,7 +28,7 @@ html {
 
 body {
   font-family: "Space Grotesk", sans-serif;
-  background: var(--bg);
+  /* background: var(--bg); */
   color: var(--text);
   overflow-x: hidden;
 }
@@ -44,33 +44,39 @@ body {
   overflow: hidden;
 }
 
-/* Background Glow Effects */
-
-.page-shell::before,
+/* .page-shell::before,
 .page-shell::after {
   content: "";
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
   z-index: -1;
-  opacity: 0.45;
-}
+  opacity: 0.3;
+  pointer-events: none;
+} */
 
+/* 
 .page-shell::before {
-  width: 30rem;
-  height: 30rem;
-  background: rgba(59, 130, 246, 0.22);
-  top: -10rem;
-  left: -10rem;
+  width: 22rem;
+  height: 22rem;
+  background: radial-gradient(circle,
+      rgba(59, 130, 246, 0.22) 0%,
+      transparent 70%);
+
+  top: -8rem;
+  left: -8rem;
 }
 
-.page-shell::after {
-  width: 35rem;
-  height: 35rem;
-  background: rgba(14, 165, 233, 0.18);
-  bottom: -14rem;
-  right: -12rem;
-}
+/* BOTTOM GLOW */
+/* .page-shell::after {
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle,
+      rgba(14, 165, 233, 0.18) 0%,
+      transparent 70%);
+
+  bottom: -10rem;
+  right: -10rem;
+}  */
 
 .container {
   width: min(1200px, calc(100% - 2rem));
