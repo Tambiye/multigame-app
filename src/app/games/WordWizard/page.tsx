@@ -17,35 +17,16 @@ const VALID_WORDS = new Set(
 );
 
 // ─── Base words ───────────────────────────────────────────────────────────────
-const BASE_WORDS = [
-  "generation",
-  "developer",
-  "javascript",
-  "component",
-  "framework",
-  "algorithm",
-  "education",
-  "beautiful",
-  "chocolate",
-  "wonderful",
-  "adventure",
-  "president",
-  "telephone",
-  "restaurant",
-  "information",
-  "vocabulary",
-  "wilderness",
-  "celebration",
-  "conversation",
-  "relationship",
-  "triangle",
-  "integral",
-  "creation",
-  "reaction",
-  "relations",
-  "streamline",
-];
-
+// ─── Random base words ───────────────────────────────────────────────────────
+const BASE_WORDS = englishWords
+  .map((w) => w.toLowerCase())
+  .filter(
+    (w) =>
+      /^[a-z]+$/.test(w) &&
+      w.length >= 7 &&
+      w.length <= 12 &&
+      new Set(w).size >= 5
+  );
 // ─── Rank tiers ───────────────────────────────────────────────────────────────
 const RANK_TIERS = [
   { min: 0, label: "", color: "" },
@@ -55,6 +36,9 @@ const RANK_TIERS = [
   { min: 40, label: "Linguistic Oracle", color: "#f472b6" },
   { min: 50, label: "Transcendent Sage", color: "#34d399" },
 ];
+
+
+
 
 function getRank(count: number) {
   let rank = RANK_TIERS[0];
@@ -67,6 +51,12 @@ function getRank(count: number) {
 }
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
+
+function getRandomBaseWord() {
+  return BASE_WORDS[
+    Math.floor(Math.random() * BASE_WORDS.length)
+  ];
+}
 function canFormWord(base: string, word: string) {
   const letters = base.toLowerCase().split("");
 
@@ -92,7 +82,7 @@ function isValidWord(base: string, word: string) {
 
 export default function WordWizard() {
   const [wordIndex, setWordIndex] = useState(0);
-  const [baseWord, setBaseWord] = useState(BASE_WORDS[0]);
+const [baseWord, setBaseWord] = useState("");
   const [foundWords, setFoundWords] = useState<string[]>([]);
   const [input, setInput] = useState("");
 
@@ -110,7 +100,9 @@ export default function WordWizard() {
   const [newChip, setNewChip] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
-
+useEffect(() => {
+  setBaseWord(getRandomBaseWord());
+}, []);
   // ─── Stats ──────────────────────────────────────────────────────────────────
   const count = foundWords.length;
 
@@ -130,22 +122,22 @@ export default function WordWizard() {
   const unlocked = count >= 10;
 
   // ─── Load next word ─────────────────────────────────────────────────────────
-  function loadWord(index: number) {
-    setBaseWord(
-      BASE_WORDS[index % BASE_WORDS.length]
-    );
+ function loadWord() {
+  let nextWord = getRandomBaseWord();
 
-    setFoundWords([]);
-    setInput("");
-    setMessage(null);
-    setNewChip("");
-
-    inputRef.current?.focus();
+  while (nextWord === baseWord) {
+    nextWord = getRandomBaseWord();
   }
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+  setBaseWord(nextWord);
+
+  setFoundWords([]);
+  setInput("");
+  setMessage(null);
+  setNewChip("");
+
+  inputRef.current?.focus();
+}
 
   // ─── UI helpers ─────────────────────────────────────────────────────────────
   function showMsg(text: string, ok: boolean) {
@@ -243,13 +235,9 @@ export default function WordWizard() {
   }
 
   // ─── Next word ──────────────────────────────────────────────────────────────
-  function handleNext() {
-    const ni = wordIndex + 1;
-
-    setWordIndex(ni);
-
-    loadWord(ni);
-  }
+function handleNext() {
+  loadWord();
+}
 
   return (
     <>
@@ -269,7 +257,8 @@ export default function WordWizard() {
           </span>
 
           <div className={styles.tiles}>
-            {baseWord.split("").map((l, i) => (
+           {baseWord &&
+  baseWord.split("").map((l, i) => (
               <div
                 key={i}
                 className={styles.tile}
