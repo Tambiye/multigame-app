@@ -1,36 +1,53 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  min-height: 100vh;
+
+  background: #050505;
+  overflow-x: hidden;
+}
+.app-shell {
+  background: #050505;
+  min-height: 100vh;
+}
+
 .dashboard-layout {
   display: flex;
-  height: 100vh;
-  overflow: hidden;
-
-  background: #EFF0F0;
+  min-height: 100vh;
+  width: 100%;
+  background: #050505;
 }
 
 .main-area {
   flex: 1;
-  min-width: 0;
-
   display: flex;
   flex-direction: column;
+  background: #050505;
 }
 
 .page-content {
   flex: 1;
-  padding: 20px;
+  padding: 0;
+    /* important */
+    margin: 0;
+  /* padding: 20px; */
   overflow-y: auto;
-
-  background: #EFF0F0;
+  
 }
 
 .topbar {
   width: 100%;
+  margin-bottom: 0;
 }
 
 /* ─────────────────────────────────────────────
    FOOTER
 ───────────────────────────────────────────── */
 .app-footer {
-  margin-top: 60px;
+  /* margin-top: 60px; */
   padding: 24px 16px;
 
   position: relative;
@@ -42,7 +59,7 @@
       #2950D9 0%,
       #1E3FAF 100%);
 
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  /* border-top: 1px solid rgba(255, 255, 255, 0.15); */
 
   color: rgba(255, 255, 255, 0.8);
 
@@ -114,9 +131,7 @@
    RESPONSIVE
 ───────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .page-content {
-    padding: 16px;
-  }
+  
 
   .app-footer {
     font-size: 0.85rem;

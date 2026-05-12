@@ -3,6 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/WordWizard.module.css";
 import englishWords from "an-array-of-english-words";
+import {
+  WandSparkles,
+  Crown,
+  ScrollText,
+  Sparkles,
+  Flame
+} from "lucide-react";
 
 // ─── Dictionary ───────────────────────────────────────────────────────────────
 const VALID_WORDS = new Set(
@@ -29,12 +36,42 @@ const BASE_WORDS = englishWords
   );
 // ─── Rank tiers ───────────────────────────────────────────────────────────────
 const RANK_TIERS = [
-  { min: 0, label: "", color: "" },
-  { min: 10, label: "Word Wizard", color: "#a78bfa" },
-  { min: 20, label: "Lexicon Lord", color: "#f59e0b" },
-  { min: 30, label: "Grand Grammarian", color: "#38bdf8" },
-  { min: 40, label: "Linguistic Oracle", color: "#f472b6" },
-  { min: 50, label: "Transcendent Sage", color: "#34d399" },
+  { min: 0, label: "", className: "" },
+
+  {
+    min: 10,
+    label: "Word Wizard",
+    className: "wizard",
+    icon: <WandSparkles size={16} />
+  },
+
+  {
+    min: 20,
+    label: "Lexicon Lord",
+    className: "lord",
+    icon: <ScrollText size={16} />
+  },
+
+  {
+    min: 30,
+    label: "Grand Grammarian",
+    className: "grammarian",
+    icon: <Crown size={16} />
+  },
+
+  {
+    min: 40,
+    label: "Linguistic Oracle",
+    className: "oracle",
+    icon: <Sparkles size={16} />
+  },
+
+  {
+    min: 50,
+    label: "Transcendent Sage",
+    className: "sage",
+    icon: <Flame size={16} />
+  },
 ];
 
 
@@ -220,12 +257,12 @@ useEffect(() => {
     showMsg(`Nice — "${word}"!`, true);
 
     const milestones: Record<number, string> = {
-      10: "Word Wizard unlocked!",
-      20: "Lexicon Lord rises!",
-      30: "Grand Grammarian achieved!",
-      40: "Linguistic Oracle awakened!",
-      50: "Transcendent Sage reached!",
-    };
+  10: "Word Wizard unlocked!",
+  20: "Lexicon Lord rises!",
+  30: "Grand Grammarian achieved!",
+  40: "Linguistic Oracle awakened!",
+  50: "Transcendent Sage reached!",
+};
 
     if (milestones[next.length]) {
       setTimeout(() => {
@@ -268,22 +305,17 @@ function handleNext() {
             ))}
           </div>
 
-          <div className={styles.rankRow}>
-            {rank.label && (
-              <span
-                className={styles.rankBadge}
-                style={{
-                  color: rank.color,
-                  borderColor:
-                    rank.color + "55",
-                  background:
-                    rank.color + "18",
-                }}
-              >
-                {rank.label}
-              </span>
-            )}
-          </div>
+         <div className={styles.rankRow}>
+  {rank.label && (
+    <span
+      className={`${styles.rankBadge} ${styles[rank.className]}`}
+    >
+      {rank.icon}
+
+      <span>{rank.label}</span>
+    </span>
+  )}
+</div>
 
           <div className={styles.progressMeta}>
             <span>
