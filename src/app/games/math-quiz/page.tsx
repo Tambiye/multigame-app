@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import styles from "@/styles/math-quiz.module.css";
-
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import "@/styles/math-quiz.css";
+import { Star,Trophy } from "lucide-react";
 // ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
@@ -13,6 +13,8 @@ type Operation =
   | "divide"
   | "power"
   | "mixed";
+
+type FeedbackType = "correct" | "wrong" | "levelup" | "";
 
 interface PuzzleTemplate {
   operation: Operation;
@@ -27,7 +29,7 @@ const MAX_LIVES = 5;
 const LIFE_REFILL_MINUTES = 10;
 
 // ─────────────────────────────────────────────────────────────
-// WORD PROBLEM TEMPLATES
+// PUZZLE BANK
 // ─────────────────────────────────────────────────────────────
 const puzzleBank: PuzzleTemplate[] = [
   {
@@ -39,7 +41,6 @@ const puzzleBank: PuzzleTemplate[] = [
       "A game character collected {num1} gems and discovered {num2} hidden gems. Total?",
     ],
   },
-
   {
     operation: "subtract",
     templates: [
@@ -49,7 +50,6 @@ const puzzleBank: PuzzleTemplate[] = [
       "A tank contained {num1} liters of water. {num2} liters leaked out. Left?",
     ],
   },
-
   {
     operation: "multiply",
     templates: [
@@ -59,7 +59,6 @@ const puzzleBank: PuzzleTemplate[] = [
       "A farmer planted {num1} trees in each of {num2} fields. Total trees?",
     ],
   },
-
   {
     operation: "divide",
     templates: [
@@ -69,7 +68,6 @@ const puzzleBank: PuzzleTemplate[] = [
       "{num1} students are grouped into teams of {num2}. How many per team?",
     ],
   },
-
   {
     operation: "power",
     templates: [
@@ -78,7 +76,6 @@ const puzzleBank: PuzzleTemplate[] = [
       "A computer multiplies its speed by itself {num2} times. Find {num1}^{num2}.",
     ],
   },
-
   {
     operation: "mixed",
     templates: [
@@ -91,7 +88,7 @@ const puzzleBank: PuzzleTemplate[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────
-// RANDOM HELPERS
+// HELPERS
 // ─────────────────────────────────────────────────────────────
 const names = [
   "Alex",
@@ -117,48 +114,44 @@ const rand = (min: number, max: number) =>
 const randomItem = <T,>(arr: T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
 
-// ─────────────────────────────────────────────────────────────
-// COMPONENT
-// ─────────────────────────────────────────────────────────────
 export default function MathQuizPage() {
   const [question, setQuestion] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState(0);
+  const [currentOp, setCurrentOp] = useState<Operation>("add");
 
   const [userAnswer, setUserAnswer] = useState("");
-
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
-
   const [questionCount, setQuestionCount] = useState(0);
 
-  const [feedback, setFeedback] = useState("");
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackType, setFeedbackType] = useState<FeedbackType>("");
 
   const [lives, setLives] = useState(MAX_LIVES);
-
   const [lastLifeLostAt, setLastLifeLostAt] = useState<number | null>(null);
 
-  // ─────────────────────────────────────────────────────────────
-  // DIFFICULTY SCALE
-  // ─────────────────────────────────────────────────────────────
-  const difficulty = useMemo(() => {
-    return {
+  const [questionAnim, setQuestionAnim] = useState<
+    "shake" | "pop" | ""
+  >("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const difficulty = useMemo(
+    () => ({
       min: level * 2,
       max: level * 25,
-    };
-  }, [level]);
+    }),
+    [level]
+  );
 
-  // ─────────────────────────────────────────────────────────────
-  // LIFE REFILL SYSTEM
-  // ─────────────────────────────────────────────────────────────
   useEffect(() => {
     if (lives >= MAX_LIVES || !lastLifeLostAt) return;
 
     const interval = setInterval(() => {
-      const now = Date.now();
-      const diff = now - lastLifeLostAt;
+      const diff = Date.now() - lastLifeLostAt;
 
       if (diff >= LIFE_REFILL_MINUTES * 60 * 1000) {
-        setLives((prev) => Math.min(prev + 1, MAX_LIVES));
+        setLives((p) => Math.min(p + 1, MAX_LIVES));
         setLastLifeLostAt(Date.now());
       }
     }, 1000);
@@ -166,9 +159,13 @@ export default function MathQuizPage() {
     return () => clearInterval(interval);
   }, [lives, lastLifeLostAt]);
 
-  // ─────────────────────────────────────────────────────────────
-  // TIMER FOR NEXT LIFE
-  // ─────────────────────────────────────────────────────────────
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setTick((n) => n + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+
   const refillCountdown = useMemo(() => {
     if (!lastLifeLostAt || lives >= MAX_LIVES) return null;
 
@@ -180,178 +177,210 @@ export default function MathQuizPage() {
     const secs = Math.max(0, remaining % 60);
 
     return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }, [lastLifeLostAt, lives]);
+  }, [lastLifeLostAt, lives, tick]);
 
-  // ─────────────────────────────────────────────────────────────
-  // QUESTION GENERATOR
-  // ─────────────────────────────────────────────────────────────
-  const generateQuestion = () => {
-    const availableOperations: Operation[] =
-      level <= 2
-        ? ["add", "subtract"]
-        : level <= 4
-        ? ["add", "subtract", "multiply"]
-        : level <= 6
-        ? ["add", "subtract", "multiply", "divide"]
-        : ["add", "subtract", "multiply", "divide", "power", "mixed"];
+  const generateQuestion = useCallback(
+    (lvl: number, diff: { min: number; max: number }) => {
+      const availableOps: Operation[] =
+        lvl <= 2
+          ? ["add", "subtract"]
+          : lvl <= 4
+          ? ["add", "subtract", "multiply"]
+          : lvl <= 6
+          ? ["add", "subtract", "multiply", "divide"]
+          : ["add", "subtract", "multiply", "divide", "power", "mixed"];
 
-    const selectedOperation = randomItem(availableOperations);
+      const op = randomItem(availableOps);
+      const category = puzzleBank.find((i) => i.operation === op)!;
+      const template = randomItem(category.templates);
 
-    const category = puzzleBank.find(
-      (item) => item.operation === selectedOperation
-    )!;
+      const num1 = rand(diff.min, diff.max);
+      const num2 = rand(2, Math.max(5, diff.max / 2));
+      const num3 = rand(1, Math.max(10, diff.max / 3));
+      const name = randomItem(names);
 
-    const template = randomItem(category.templates);
+      let answer = 0;
 
-    const num1 = rand(difficulty.min, difficulty.max);
-    const num2 = rand(2, Math.max(5, difficulty.max / 2));
-    const num3 = rand(1, Math.max(10, difficulty.max / 3));
-
-    const name = randomItem(names);
-
-    let answer = 0;
-
-    switch (selectedOperation) {
-      case "add":
-        answer = num1 + num2;
-        break;
-
-      case "subtract":
-        answer = num1 - num2;
-        break;
-
-      case "multiply":
-        answer = num1 * num2;
-        break;
-
-      case "divide":
-        answer = num1 * num2;
-        break;
-
-      case "power":
-        answer = Math.pow(
-          rand(2, Math.min(6, level + 2)),
-          rand(2, 3)
-        );
-        break;
-
-      case "mixed":
-        answer = num1 * num2 - num3;
-        break;
-    }
-
-    let finalQuestion = template
-      .replace("{name}", name)
-      .replace("{num1}", String(num1))
-      .replace("{num2}", String(num2))
-      .replace("{num3}", String(num3));
-
-    if (selectedOperation === "divide") {
-      finalQuestion = template
+      let finalQuestion = template
         .replace("{name}", name)
-        .replace("{num1}", String(answer))
-        .replace("{num2}", String(num2));
+        .replace("{num1}", String(num1))
+        .replace("{num2}", String(num2))
+        .replace("{num3}", String(num3));
 
-      answer = answer / num2;
-    }
+      switch (op) {
+        case "add":
+          answer = num1 + num2;
+          break;
 
-    if (selectedOperation === "power") {
-      const base = rand(2, 5);
-      const exponent = rand(2, 3);
+        case "subtract":
+          answer = num1 - num2;
+          break;
 
-      finalQuestion = template
-        .replace("{name}", name)
-        .replace("{num1}", String(base))
-        .replace("{num2}", String(exponent));
+        case "multiply":
+          answer = num1 * num2;
+          break;
 
-      answer = Math.pow(base, exponent);
-    }
+        case "mixed":
+          answer = num1 * num2 - num3;
+          break;
 
-    setQuestion(finalQuestion);
-    setCorrectAnswer(answer);
-  };
+        case "divide": {
+          const product = num1 * num2;
 
-  // ─────────────────────────────────────────────────────────────
-  // LOAD QUESTION
-  // ─────────────────────────────────────────────────────────────
+          finalQuestion = template
+            .replace("{name}", name)
+            .replace("{num1}", String(product))
+            .replace("{num2}", String(num2));
+
+          answer = num1;
+          break;
+        }
+
+        case "power": {
+          const base = rand(2, 5);
+          const exp = rand(2, 3);
+
+          finalQuestion = template
+            .replace("{name}", name)
+            .replace("{num1}", String(base))
+            .replace("{num2}", String(exp));
+
+          answer = Math.pow(base, exp);
+          break;
+        }
+      }
+
+      setCurrentOp(op);
+      setQuestion(finalQuestion);
+      setCorrectAnswer(answer);
+    },
+    []
+  );
+
   useEffect(() => {
-    generateQuestion();
-  }, [level]);
+    generateQuestion(1, { min: 2, max: 25 });
+  }, [generateQuestion]);
 
-  // ─────────────────────────────────────────────────────────────
-  // NEXT QUESTION
-  // ─────────────────────────────────────────────────────────────
-  const nextQuestion = () => {
-    const nextCount = questionCount + 1;
-
-    setQuestionCount(nextCount);
-
-    if (nextCount % QUESTIONS_PER_LEVEL === 0) {
-      setLevel((prev) => prev + 1);
-      setFeedback("🚀 LEVEL UP!");
-    } else {
-      generateQuestion();
-    }
-  };
-
-  // ─────────────────────────────────────────────────────────────
-  // SUBMIT ANSWER
-  // ─────────────────────────────────────────────────────────────
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!userAnswer.trim()) return;
 
     const parsed = Number(userAnswer);
 
     if (parsed === correctAnswer) {
-      setScore((prev) => prev + level * 10);
+      setScore((p) => p + level * 10);
+      setFeedbackType("correct");
+      setFeedbackText(`✅ Correct! +${level * 10} pts`);
+      setQuestionAnim("pop");
 
-      setFeedback("✅ Correct!");
+      const nextCount = questionCount + 1;
+      setQuestionCount(nextCount);
 
       setTimeout(() => {
-        nextQuestion();
-      }, 500);
-    } else {
-      setLives((prev) => prev - 1);
+        setQuestionAnim("");
 
+        if (nextCount % QUESTIONS_PER_LEVEL === 0) {
+          const nextLevel = level + 1;
+
+          setLevel(nextLevel);
+          setFeedbackType("levelup");
+          setFeedbackText(`🚀 Level ${nextLevel}! Keep going!`);
+
+          generateQuestion(nextLevel, {
+            min: nextLevel * 2,
+            max: nextLevel * 25,
+          });
+        } else {
+          generateQuestion(level, difficulty);
+        }
+
+        setFeedbackText("");
+        setFeedbackType("");
+      }, 900);
+    } else {
+      setLives((p) => p - 1);
       setLastLifeLostAt(Date.now());
 
-      setFeedback(`❌ Wrong! Correct answer: ${correctAnswer}`);
+      setFeedbackType("wrong");
+      setFeedbackText(`❌ Nope! Answer was ${correctAnswer}`);
+      setQuestionAnim("shake");
+
+      setTimeout(() => {
+        setQuestionAnim("");
+        setFeedbackText("");
+        setFeedbackType("");
+      }, 1600);
     }
 
     setUserAnswer("");
 
-    setTimeout(() => {
-      setFeedback("");
-    }, 1500);
-  };
+    setTimeout(() => inputRef.current?.focus(), 50);
+  }, [
+    userAnswer,
+    correctAnswer,
+    level,
+    questionCount,
+    difficulty,
+    generateQuestion,
+  ]);
 
-  // ─────────────────────────────────────────────────────────────
-  // RESET
-  // ─────────────────────────────────────────────────────────────
-  const resetGame = () => {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") handleSubmit();
+    },
+    [handleSubmit]
+  );
+
+  const resetGame = useCallback(() => {
     setScore(0);
     setLevel(1);
     setQuestionCount(0);
     setLives(MAX_LIVES);
-    setFeedback("");
+    setFeedbackText("");
+    setFeedbackType("");
     setUserAnswer("");
-    generateQuestion();
+    setLastLifeLostAt(null);
+
+    generateQuestion(1, { min: 2, max: 25 });
+  }, [generateQuestion]);
+
+  const progressPct =
+    ((questionCount % QUESTIONS_PER_LEVEL) / QUESTIONS_PER_LEVEL) * 100;
+
+  const opLabels: Record<Operation, string> = {
+    add: "➕ Addition",
+    subtract: "➖ Subtraction",
+    multiply: "✖️ Multiplication",
+    divide: "➗ Division",
+    power: "⚡ Powers",
+    mixed: "🔀 Mixed",
   };
 
-  // ─────────────────────────────────────────────────────────────
-  // GAME OVER
-  // ─────────────────────────────────────────────────────────────
   if (lives <= 0) {
     return (
-      <main className={styles.gameOver}>
-        <div className={styles.gameOverCard}>
-          <h1>💀 GAME OVER</h1>
+      <main className="mq-gameover">
+        <div className="mq-gameover-card">
+          <span className="mq-gameover-skull">💀</span>
 
-          <p>Your score: {score}</p>
+          <h1 className="mq-gameover-title">Game Over</h1>
 
-          <p>Highest level: {level}</p>
+          <div className="mq-gameover-stats">
+            <div className="mq-gameover-stat">
+              <span className="num">{score}</span>
+              <span className="lbl">Final Score</span>
+            </div>
 
-          <button onClick={resetGame} className={styles.playAgain}>
+            <div className="mq-gameover-stat">
+              <span className="num">{level}</span>
+              <span className="lbl">Highest Level</span>
+            </div>
+
+            <div className="mq-gameover-stat">
+              <span className="num">{questionCount}</span>
+              <span className="lbl">Answered</span>
+            </div>
+          </div>
+
+          <button onClick={resetGame} className="mq-play-again">
             Play Again
           </button>
         </div>
@@ -359,58 +388,114 @@ export default function MathQuizPage() {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // UI
-  // ─────────────────────────────────────────────────────────────
   return (
-    <main className={styles.wrapper}>
-      <section className={styles.quizCard}>
-        <div className={styles.topBar}>
-          <div className={styles.level}>
-            <span>Level</span>
-            <strong>{level}</strong>
+    <main className="mq-root">
+      <section className="mq-card">
+        <div className="mq-header">
+        
+       
+          <div className="mq-stat">
+         <div className="mq-stat-icon level">
+  <Trophy size={18} />
+</div>
+
+            <div>
+              <div className="mq-stat-label">Level</div>
+              <div className="mq-stat-value">{level}</div>
+            </div>
           </div>
 
-          <div className={styles.score}>
-            <span>Score</span>
-            <strong>{score}</strong>
+          <div className="mq-stat">
+            <div className="mq-stat-icon score">
+  <Star size={18} />
+</div>
+            <div>
+              <div className="mq-stat-label">Score</div>
+              <div className="mq-stat-value">
+                {score.toLocaleString()}
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className={styles.hearts}>
-          {Array.from({ length: lives }).map((_, i) => (
-            <span key={i}>❤️</span>
+          <div className="mq-live-container"><div className="mq-lives">
+          {Array.from({ length: MAX_LIVES }).map((_, i) => (
+            <span
+              key={i}
+              className={`mq-heart${i >= lives ? " lost" : ""}`}
+            >
+              ❤️
+            </span>
           ))}
         </div>
-
-        {lives < MAX_LIVES && (
-          <p className={styles.refill}>
+            {lives < MAX_LIVES && refillCountdown && (
+          <p className="mq-refill">
             ⏳ Next life in {refillCountdown}
           </p>
         )}
+        </div>
+           
 
-        <div className={styles.progress}>
-          Question {(questionCount % QUESTIONS_PER_LEVEL) + 1} /{" "}
-          {QUESTIONS_PER_LEVEL}
+      
+
+        </div>
+      
+
+        <div className="mq-progress-row">
+          <span className="mq-progress-label">
+            Question {(questionCount % QUESTIONS_PER_LEVEL) + 1} /{" "}
+            {QUESTIONS_PER_LEVEL}
+          </span>
+
+          <span className="mq-progress-pct">
+            {Math.round(progressPct)}%
+          </span>
         </div>
 
-        <div className={styles.questionBox}>
+        <div className="mq-bar">
+          <div
+            className="mq-bar-fill"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 14 }}>
+          <span className="mq-op-badge">
+            {opLabels[currentOp]}
+          </span>
+        </div>
+
+        <div
+          className={`mq-question${
+            questionAnim ? ` ${questionAnim}` : ""
+          }`}
+        >
           <p>{question}</p>
         </div>
 
-        <input
-          type="number"
-          value={userAnswer}
-          onChange={(e) => setUserAnswer(e.target.value)}
-          placeholder="Type answer..."
-          className={styles.answerInput}
-        />
+    <input
+  ref={inputRef}
+  type="text"
+  inputMode="numeric"
+  value={userAnswer}
+  onChange={(e) => setUserAnswer(e.target.value)}
+  onKeyDown={handleKeyDown}
+  placeholder="0"
+  className="mq-input"
+  autoFocus
+/>
 
-        <button onClick={handleSubmit} className={styles.submitBtn}>
-          Submit Answer
+        <button
+          onClick={handleSubmit}
+          className="mq-btn"
+          // disabled={!userAnswer.trim()}
+        >
+          Answer
         </button>
 
-        {feedback && <p className={styles.feedback}>{feedback}</p>}
+        {feedbackText && (
+          <div className={`mq-feedback ${feedbackType}`}>
+            {feedbackText}
+          </div>
+        )}
       </section>
     </main>
   );

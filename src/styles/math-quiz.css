@@ -1,0 +1,838 @@
+ @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap');
+
+:root {
+    --primary: #5b6ee1;
+    --primary-dark: #4356c5;
+    --primary-light: #eef1ff;
+    --surface: #f7f8fc;
+    --card: #ffffff;
+    --border: #dbe1ff;
+    --text: #111827;
+    --muted: #7f8bb3;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--surface);
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.mq-root {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+    background: #111827;;
+}
+
+.mq-card {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px;
+    border-radius: 10px;
+    border: #2950D9 2px solid;
+
+    
+}
+
+/* HEADER */
+.mq-header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:0.5rem;
+    margin-bottom: 30px;
+}
+
+.mq-stat {
+    background:#d9e0f5;
+    border: 1px solid #d9e0f5;
+    border-radius: 8px;
+    padding: 6px 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    width: 100px;
+        height: 50px;
+    
+}
+
+
+.mq-stat-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.mq-stat-icon.score svg {
+    color: #facc15;
+    fill: currentColor;
+}
+
+.mq-stat-icon.level svg {
+    color: #2950D9;
+}
+.mq-stat-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #dfe5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.mq-stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.mq-stat-value {
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    color: #111;
+    line-height: 1;
+}
+.mq-lives-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+/* LIVES */
+.mq-lives {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.mq-heart {
+    font-size: 1rem;
+    transition: 0.2s ease;
+}
+
+.mq-heart.lost {
+    opacity: 0.25;
+    transform: scale(0.9);
+}
+
+/* REFILL */
+.mq-refill {
+    display: flex;
+    justify-content: flex-end;
+    color: #a16207;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+/* PROGRESS */
+.mq-progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.mq-progress-label,
+.mq-progress-pct {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #7c89b0;
+}
+
+.mq-progress-pct {
+    color: #4154d8;
+}
+
+.mq-bar {
+    width: 100%;
+    height: 4px;
+    background: #e8ebf5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.mq-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #5b6ee1, #8393ff);
+    transition: width 0.4s ease;
+}
+
+/* OPERATION BADGE */
+.mq-op-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: #edf0ff;
+    border: 1px solid #ccd4ff;
+    color: #5b48c9;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+/* QUESTION */
+.mq-question {
+    background: #eef1fa;
+    border: 1px solid #d9e0f5;
+    border-radius: 10px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-bottom: 18px;
+    transition: transform 0.25s ease;
+}
+
+.mq-question p {
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: 0.8px;
+    text-align: center;
+    font-weight: 900;
+    color: #111827;
+    max-width: 620px;
+}
+
+/* INPUT */
+.mq-input {
+    width: 120px;
+    height: 44px;
+    border-radius: 8px;
+    border: 2px solid #d5dcf7;
+    background: #fff;
+    padding: 0 14px;
+    font-size: 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #111;
+    margin: 0 auto 24px;
+    /* centers horizontally */
+    outline: none;
+    transition: 0.2s ease;
+    text-align: center;
+    display: block;
+}
+.mq-input::placeholder {
+    color: #93a0c8;
+}
+
+.mq-input:focus {
+    border-color: #5b6ee1;
+    box-shadow: 0 0 0 5px rgba(91, 110, 225, 0.12);
+}
+
+/* BUTTON */
+.mq-btn {
+    width: 100px;
+    height: 42px;
+    border: none;
+    border-radius: 8px;
+    background: #4356c5;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    display: block;
+    margin: 0 auto;
+
+    opacity: 1;
+}
+
+.mq-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.mq-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.mq-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* FEEDBACK */
+.mq-feedback {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 18px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.mq-feedback.correct {
+    background: #e9fff4;
+    color: #0f8a5f;
+}
+
+.mq-feedback.wrong {
+    background: #fff1f1;
+    color: #cc3d3d;
+}
+
+.mq-feedback.levelup {
+    background: #eef1ff;
+    color: #4356c5;
+}
+
+/* GAME OVER */
+.mq-gameover {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #f6f8fd;
+}
+
+.mq-gameover-card {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 8px;
+    padding: 50px 35px;
+    text-align: center;
+    border: 1px solid #dbe1ff;
+    box-shadow: 0 30px 60px rgba(91, 110, 225, 0.1);
+}
+
+.mq-gameover-skull {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 18px;
+}
+
+.mq-gameover-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin-bottom: 26px;
+}
+
+.mq-gameover-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.mq-gameover-stat {
+    background: #f3f5fd;
+    border-radius: 18px;
+    padding: 18px 12px;
+}
+
+.mq-gameover-stat .num {
+    display: block;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #5b6ee1;
+    margin-bottom: 6px;
+}
+
+.mq-gameover-stat .lbl {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #7f8bb3;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.mq-play-again {
+    width: 100%;
+    height: 70px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #98a7ef, #7d8ee5);
+    color: white;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* ANIMATIONS */
+.mq-question.shake {
+    animation: shake 0.35s ease;
+}
+
+.mq-question.pop {
+    animation: pop 0.3s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-6px);
+    }
+
+    75% {
+        transform: translateX(6px);
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.96);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .mq-root {
+        padding: 24px 14px;
+    }
+
+    .mq-card {
+        padding: 10px;
+    }
+
+    .mq-header {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+
+    .mq-stat {
+        width: 100%;
+        height: 48px;
+    }
+
+    .mq-question {
+        min-height: 90px;
+        padding: 18px;
+    }
+
+    .mq-question p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .mq-input {
+        width: 110px;
+        height: 42px;
+        font-size: 0.95rem;
+    }
+
+    .mq-btn {
+        width: 95px;
+        height: 40px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .mq-root {
+        padding: 20px 12px;
+    }
+
+    .mq-card {
+        padding: 8px;
+    }
+
+    .mq-header {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .mq-stat {
+        width: 100%;
+        max-width: 140px;
+        margin: 0 auto;
+    }
+
+    .mq-question {
+        min-height: 80px;
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .mq-question p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .mq-input {
+        width: 100px;
+        height: 40px;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        margin-bottom: 18px;
+    }
+
+    .mq-btn {
+        width: 90px;
+        height: 38px;
+        border-radius: 8px;
+        font-size: 0.72rem;
+    }
+
+    .mq-gameover-card {
+        padding: 32px 20px;
+    }
+
+    .mq-gameover-title {
+        font-size: 1.8rem;
+    }
+
+    .mq-gameover-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
+   SMALL MOBILE RESPONSIVE
+   400px and below
+========================= */
+@media (max-width: 400px) {
+
+    .mq-root {
+        padding: 14px 8px;
+        align-items: flex-start;
+    }
+
+    .mq-card {
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    /* HEADER */
+    .mq-header {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.35rem;
+        margin-bottom: 18px;
+    }
+
+    .mq-stat {
+        width: 100%;
+        height: 42px;
+
+        padding: 4px 6px;
+
+        border-radius: 10px;
+    }
+
+    .mq-stat-icon {
+        width: 22px;
+        height: 22px;
+
+        border-radius: 6px;
+    }
+
+    .mq-stat-icon svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .mq-stat-label {
+        font-size: 0.52rem;
+        margin-bottom: 2px;
+        letter-spacing: 0.08em;
+    }
+
+    .mq-stat-value {
+        font-size: 0.72rem;
+    }
+
+    /* LIVES */
+    .mq-lives {
+        gap: 3px;
+        margin-bottom: 8px;
+    }
+
+    .mq-heart {
+        font-size: 0.9rem;
+    }
+
+    /* REFILL */
+    .mq-refill {
+        font-size: 0.62rem;
+    }
+
+    /* PROGRESS */
+    .mq-progress-row {
+        margin-bottom: 8px;
+    }
+
+    .mq-progress-label,
+    .mq-progress-pct {
+        font-size: 0.65rem;
+    }
+
+    .mq-bar {
+        height: 5px;
+        margin-bottom: 12px;
+    }
+
+    /* BADGE */
+    .mq-op-badge {
+        width: 100%;
+
+        justify-content: center;
+
+        font-size: 0.58rem;
+
+        padding: 5px 7px;
+
+        border-radius: 8px;
+
+        margin-bottom: 12px;
+    }
+
+    /* QUESTION */
+    .mq-question {
+        min-height: 75px;
+
+        padding: 14px 10px;
+
+        border-radius: 12px;
+
+        margin-bottom: 14px;
+    }
+
+    .mq-question p {
+        font-size: 0.8rem;
+
+        line-height: 1.45;
+
+        letter-spacing: 0.2px;
+    }
+
+    /* INPUT */
+    .mq-input {
+        width: 100%;
+        max-width: 115px;
+
+        height: 38px;
+
+        font-size: 0.84rem;
+
+        padding: 0 10px;
+
+        margin-bottom: 14px;
+
+        border-radius: 10px;
+    }
+
+    /* BUTTON */
+    .mq-btn {
+        width: 100%;
+        max-width: 130px;
+
+        height: 38px;
+
+        font-size: 0.66rem;
+
+        letter-spacing: 0.05em;
+
+        border-radius: 10px;
+    }
+
+    /* FEEDBACK */
+    .mq-feedback {
+        margin-top: 14px;
+
+        padding: 12px;
+
+        border-radius: 12px;
+
+        font-size: 0.74rem;
+    }
+
+    /* GAME OVER */
+    .mq-gameover {
+        padding: 14px;
+    }
+
+    .mq-gameover-card {
+        padding: 24px 16px;
+
+        border-radius: 14px;
+    }
+
+    .mq-gameover-skull {
+        font-size: 2.8rem;
+
+        margin-bottom: 14px;
+    }
+
+    .mq-gameover-title {
+        font-size: 1.4rem;
+
+        margin-bottom: 18px;
+    }
+
+    .mq-gameover-stats {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .mq-gameover-stat {
+        padding: 14px 10px;
+
+        border-radius: 12px;
+    }
+
+    .mq-gameover-stat .num {
+        font-size: 1.25rem;
+    }
+
+    .mq-gameover-stat .lbl {
+        font-size: 0.62rem;
+    }
+
+    .mq-play-again {
+        height: 50px;
+
+        font-size: 0.8rem;
+
+        border-radius: 12px;
+    }
+}
+
+/* =========================
+   EXTRA SMALL DEVICES
+   300px and below
+========================= */
+@media (max-width: 300px) {
+
+    .mq-root {
+        padding: 10px 6px;
+    }
+
+    .mq-card {
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    /* HEADER STACKS HERE */
+    .mq-header {
+        grid-template-columns: 1fr;
+        gap: 0.45rem;
+        margin-bottom: 14px;
+    }
+
+    .mq-stat {
+        width: 100%;
+        max-width: 100%;
+
+        height: 40px;
+
+        padding: 4px 6px;
+
+        border-radius: 8px;
+    }
+
+    .mq-stat-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .mq-stat-icon svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .mq-stat-label {
+        font-size: 0.48rem;
+    }
+
+    .mq-stat-value {
+        font-size: 0.68rem;
+    }
+
+    /* QUESTION */
+    .mq-question {
+        min-height: 68px;
+
+        padding: 12px 8px;
+
+        margin-bottom: 12px;
+    }
+
+    .mq-question p {
+        font-size: 0.74rem;
+
+        line-height: 1.35;
+    }
+
+    /* INPUT */
+    .mq-input {
+        max-width: 100px;
+
+        height: 34px;
+
+        font-size: 0.78rem;
+
+        margin-bottom: 12px;
+    }
+
+    /* BUTTON */
+    .mq-btn {
+        max-width: 110px;
+
+        height: 34px;
+
+        font-size: 0.6rem;
+
+        border-radius: 8px;
+    }
+
+    /* BADGE */
+    .mq-op-badge {
+        font-size: 0.52rem;
+
+        padding: 4px 6px;
+    }
+
+    /* FEEDBACK */
+    .mq-feedback {
+        padding: 10px;
+
+        font-size: 0.68rem;
+    }
+
+    /* GAME OVER */
+    .mq-gameover-card {
+        padding: 18px 12px;
+    }
+
+    .mq-gameover-title {
+        font-size: 1.1rem;
+    }
+
+    .mq-play-again {
+        height: 44px;
+
+        font-size: 0.72rem;
+    }
+}
