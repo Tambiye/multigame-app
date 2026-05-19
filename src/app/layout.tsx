@@ -9,6 +9,7 @@ import Topbar from '@/components/Topbar'
 import Footer from '@/components/Footer'
 import Providers from '@/components/Providers'
 import { LayoutProvider } from '@/context/LayoutContext' // ✅ ADD THIS
+import ShareButton from "@/components/ShareButton";
 
 export default function RootLayout({
   children,
@@ -29,10 +30,12 @@ export default function RootLayout({
               <div className="main-area">
                 <Topbar />
 
+
                 <main className="page-content">
                   {children}
+                
                 </main>
-
+ <ShareButton />
                 <Footer /> {/* ✅ MOVE FOOTER HERE */}
               </div>
 

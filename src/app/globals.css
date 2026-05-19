@@ -171,3 +171,29 @@ body {
   transform: scale(1.03);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
 }
+
+
+
+.share-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #2950D9;
+  color: white;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 50px;
+
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.share-btn:hover {
+  transform: scale(1.05);
+}
