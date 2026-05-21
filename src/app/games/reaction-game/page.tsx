@@ -1,5 +1,5 @@
 'use client'
-
+import { Share2 } from 'lucide-react'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import styles from '@/styles/reaction-game.module.css'
 
@@ -115,6 +115,32 @@ export default function ReactionGame() {
     }
   }
 
+  const handleShare = async () => {
+  const bestScore = leaderboard[0]?.time
+
+  if (!bestScore) return
+
+  const shareText = `⚡ I scored ${bestScore}ms in Reflex Rush!\nCan you beat my reaction speed?`
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'Reflex Rush',
+        text: shareText,
+        url: window.location.href,
+      })
+    } else {
+      await navigator.clipboard.writeText(
+        `${shareText}\n${window.location.href}`
+      )
+
+      alert('Score copied to clipboard!')
+    }
+  } catch (error) {
+    console.error('Sharing failed:', error)
+  }
+}
+
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
@@ -194,6 +220,14 @@ export default function ReactionGame() {
           ))
         )}
       </div>
+      <button
+  className={styles.shareButton}
+  onClick={handleShare}
+  disabled={!leaderboard.length}
+>
+  <Share2 size={18} />
+  Share Best Score
+</button>
     </div>
   )
 }

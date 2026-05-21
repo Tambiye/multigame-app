@@ -194,10 +194,13 @@ export default function MathQuizPage() {
       const category = puzzleBank.find((i) => i.operation === op)!;
       const template = randomItem(category.templates);
 
-      const num1 = rand(diff.min, diff.max);
-      const num2 = rand(2, Math.max(5, diff.max / 2));
-      const num3 = rand(1, Math.max(10, diff.max / 3));
-      const name = randomItem(names);
+    const num1 = rand(diff.min, diff.max);
+
+// num2 always smaller than num1
+const num2 = rand(1, Math.max(1, num1 - 1));
+
+const num3 = rand(1, Math.max(10, diff.max / 3));
+const name = randomItem(names);
 
       let answer = 0;
 
@@ -474,7 +477,7 @@ export default function MathQuizPage() {
     <input
   ref={inputRef}
   type="text"
-  inputMode="numeric"
+  inputMode="decimal"
   value={userAnswer}
   onChange={(e) => setUserAnswer(e.target.value)}
   onKeyDown={handleKeyDown}

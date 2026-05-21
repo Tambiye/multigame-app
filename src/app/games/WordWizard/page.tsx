@@ -3,13 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/WordWizard.module.css";
 import englishWords from "an-array-of-english-words";
+// 
 import {
   WandSparkles,
-  Crown,
   ScrollText,
+  Crown,
   Sparkles,
-  Flame
+  Flame,
+  
+  Scroll,
+  Feather,
+  Brain,
+  Gem
 } from "lucide-react";
+import { BookOpenCheck } from "lucide-react";
 
 // ─── Dictionary ───────────────────────────────────────────────────────────────
 const VALID_WORDS = new Set(
@@ -35,6 +42,9 @@ const BASE_WORDS = englishWords
       new Set(w).size >= 5
   );
 // ─── Rank tiers ───────────────────────────────────────────────────────────────
+
+
+
 const RANK_TIERS = [
   { min: 0, label: "", className: "" },
 
@@ -72,7 +82,44 @@ const RANK_TIERS = [
     className: "sage",
     icon: <Flame size={16} />
   },
+
+ {
+  min: 60,
+  label: "Vocabulary Vanguard",
+  className: "vanguard",
+  icon: <BookOpenCheck size={16} />
+},
+
+  {
+    min: 70,
+    label: "Syntax Sorcerer",
+    className: "sorcerer",
+    icon: <Scroll size={16} />
+  },
+
+  {
+    min: 80,
+    label: "Phantom Poet",
+    className: "poet",
+    icon: <Feather size={16} />
+  },
+
+  {
+    min: 90,
+    label: "Mythic Mindmaster",
+    className: "mindmaster",
+    icon: <Brain size={16} />
+  },
+
+  {
+    min: 100,
+    label: "Ultimate Word Titan",
+    className: "titan",
+    icon: <Gem size={16} />
+  },
 ];
+
+
 
 
 
@@ -256,12 +303,17 @@ useEffect(() => {
 
     showMsg(`Nice — "${word}"!`, true);
 
-    const milestones: Record<number, string> = {
+  const milestones: Record<number, string> = {
   10: "Word Wizard unlocked!",
   20: "Lexicon Lord rises!",
   30: "Grand Grammarian achieved!",
   40: "Linguistic Oracle awakened!",
   50: "Transcendent Sage reached!",
+  60: "Vocabulary Vanguard ascends!",
+  70: "Syntax Sorcerer unleashed!",
+  80: "Phantom Poet awakened!",
+  90: "Mythic Mindmaster achieved!",
+  100: "Ultimate Word Titan crowned!",
 };
 
     if (milestones[next.length]) {

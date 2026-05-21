@@ -229,33 +229,217 @@
 /* Rank Themes */
 
 .wizard {
-    color: #a78bfa;
-    border-color: rgba(167, 139, 250, 0.35);
-    background: rgba(167, 139, 250, 0.12);
+    color: #f8fafc;
+    border: 2px solid #c4b5fd;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #7c3aed, #4c1d95);
+    box-shadow:
+        0 0 12px rgba(167, 139, 250, 0.8),
+        0 0 35px rgba(124, 58, 237, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .lord {
-    color: #f59e0b;
-    border-color: rgba(245, 158, 11, 0.35);
-    background: rgba(245, 158, 11, 0.12);
+    color: #fff7ed;
+    border: 2px solid #fcd34d;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.2), transparent 60%),
+        linear-gradient(145deg, #f59e0b, #b45309);
+    box-shadow:
+        0 0 12px rgba(245, 158, 11, 0.8),
+        0 0 35px rgba(180, 83, 9, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .grammarian {
-    color: #38bdf8;
-    border-color: rgba(56, 189, 248, 0.35);
-    background: rgba(56, 189, 248, 0.12);
+    color: #f0f9ff;
+    border: 2px solid #7dd3fc;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #0ea5e9, #075985);
+    box-shadow:
+        0 0 12px rgba(56, 189, 248, 0.8),
+        0 0 35px rgba(14, 165, 233, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .oracle {
-    color: #f472b6;
-    border-color: rgba(244, 114, 182, 0.35);
-    background: rgba(244, 114, 182, 0.12);
+    color: #fff1f2;
+    border: 2px solid #f9a8d4;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #ec4899, #9d174d);
+    box-shadow:
+        0 0 12px rgba(244, 114, 182, 0.8),
+        0 0 35px rgba(236, 72, 153, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 .sage {
-    color: #34d399;
-    border-color: rgba(52, 211, 153, 0.35);
-    background: rgba(52, 211, 153, 0.12);
+    color: #ecfdf5;
+    border: 2px solid #6ee7b7;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #10b981, #065f46);
+    box-shadow:
+        0 0 12px rgba(52, 211, 153, 0.8),
+        0 0 35px rgba(16, 185, 129, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.vanguard {
+    color: #eff6ff;
+    border: 2px solid #93c5fd;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #3b82f6, #1e3a8a);
+    box-shadow:
+        0 0 12px rgba(96, 165, 250, 0.8),
+        0 0 35px rgba(59, 130, 246, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.sorcerer {
+    color: #faf5ff;
+    border: 2px solid #d8b4fe;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #a855f7, #581c87);
+    box-shadow:
+        0 0 12px rgba(192, 132, 252, 0.8),
+        0 0 35px rgba(168, 85, 247, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.poet {
+    color: #fff1f2;
+    border: 2px solid #fda4af;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #f43f5e, #881337);
+    box-shadow:
+        0 0 12px rgba(251, 113, 133, 0.8),
+        0 0 35px rgba(244, 63, 94, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.mindmaster {
+    color: #ecfeff;
+    border: 2px solid #67e8f9;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%),
+        linear-gradient(145deg, #06b6d4, #164e63);
+    box-shadow:
+        0 0 12px rgba(34, 211, 238, 0.8),
+        0 0 35px rgba(6, 182, 212, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.titan {
+    color: #1f2937;
+    border: 2px solid #fde047;
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.25), transparent 60%),
+        linear-gradient(145deg, #facc15, #ca8a04);
+    box-shadow:
+        0 0 16px rgba(250, 204, 21, 0.95),
+        0 0 45px rgba(250, 204, 21, 0.65),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Shared reward styling */
+.wizard,
+.lord,
+.grammarian,
+.oracle,
+.sage,
+.vanguard,
+.sorcerer,
+.poet,
+.mindmaster,
+.titan {
+    position: relative;
+    overflow: hidden;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+    transform: translateY(0);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.wizard:hover,
+.lord:hover,
+.grammarian:hover,
+.oracle:hover,
+.sage:hover,
+.vanguard:hover,
+.sorcerer:hover,
+.poet:hover,
+.mindmaster:hover,
+.titan:hover {
+    transform: translateY(-3px) scale(1.03);
+}
+
+/* Shine sweep */
+.wizard::before,
+.lord::before,
+.grammarian::before,
+.oracle::before,
+.sage::before,
+.vanguard::before,
+.sorcerer::before,
+.poet::before,
+.mindmaster::before,
+.titan::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+            transparent 20%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 80%);
+    transform: translateX(-140%);
+    animation: rewardShine 4s linear infinite;
+}
+
+/* Glow pulse */
+.wizard::after,
+.lord::after,
+.grammarian::after,
+.oracle::after,
+.sage::after,
+.vanguard::after,
+.sorcerer::after,
+.poet::after,
+.mindmaster::after,
+.titan::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    opacity: 0.45;
+    animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes rewardShine {
+    100% {
+        transform: translateX(140%);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        opacity: 0.35;
+    }
+
+    50% {
+        opacity: 0.65;
+    }
 }
 /* ───────────────── PROGRESS ───────────────── */
 

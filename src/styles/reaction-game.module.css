@@ -323,3 +323,45 @@
         font-size: 2rem;
     }
 }
+
+
+
+
+
+.shareButton {
+    margin-top: 1.5rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.95rem 1.2rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg,
+            #4f46e5,
+            #7c3aed);
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.shareButton:hover {
+    transform: translateY(-2px);
+}
+
+.shareButton:active {
+    transform: scale(0.98);
+}
+
+.shareButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
