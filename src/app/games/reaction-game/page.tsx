@@ -120,24 +120,121 @@ export default function ReactionGame() {
 
   if (!bestScore) return
 
-  const shareText = `⚡ I scored ${bestScore}ms in Reflex Rush!\nCan you beat my reaction speed?`
-
   try {
-    if (navigator.share) {
+    // Create canvas
+    const canvas = document.createElement('canvas')
+    canvas.width = 1200
+    canvas.height = 630
+
+    const ctx = canvas.getContext('2d')
+
+    if (!ctx) return
+
+    // Background
+    const gradient = ctx.createLinearGradient(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    )
+
+    gradient.addColorStop(0, '#0f172a')
+    gradient.addColorStop(1, '#111827')
+
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Glow circle
+    ctx.beginPath()
+    ctx.arc(950, 120, 180, 0, Math.PI * 2)
+    ctx.fillStyle = 'rgba(34,211,238,0.18)'
+    ctx.fill()
+
+    // Title
+    ctx.fillStyle = '#ffffff'
+    ctx.font = 'bold 72px Arial'
+    ctx.fillText('⚡ Reflex Rush', 80, 140)
+
+    // Subtitle
+    ctx.fillStyle = '#94a3b8'
+    ctx.font = '36px Arial'
+    ctx.fillText(
+      'Test your reaction speed',
+      80,
+      210
+    )
+
+    // Score Box
+    ctx.fillStyle = '#111827'
+    ctx.strokeStyle = '#22d3ee'
+    ctx.lineWidth = 6
+
+    ctx.roundRect(80, 280, 500, 220, 30)
+    ctx.fill()
+    ctx.stroke()
+
+    // Best score label
+    ctx.fillStyle = '#94a3b8'
+    ctx.font = '32px Arial'
+    ctx.fillText('BEST REACTION', 120, 360)
+
+    // Score
+    ctx.fillStyle = '#22d3ee'
+    ctx.font = 'bold 110px Arial'
+    ctx.fillText(`${bestScore}ms`, 120, 460)
+
+    // Footer text
+    ctx.fillStyle = '#ffffff'
+    ctx.font = 'bold 38px Arial'
+    ctx.fillText(
+      'Can you beat my reflexes?',
+      80,
+      570
+    )
+
+    // Convert canvas to blob
+    const blob: Blob | null = await new Promise(
+      (resolve) =>
+        canvas.toBlob(resolve, 'image/png')
+    )
+
+    if (!blob) return
+
+    const file = new File(
+      [blob],
+      'reflex-rush-score.png',
+      {
+        type: 'image/png',
+      }
+    )
+
+    const shareText = `⚡ I scored ${bestScore}ms in Reflex Rush!`
+
+    // Native share with image
+    if (
+      navigator.canShare &&
+      navigator.canShare({ files: [file] })
+    ) {
       await navigator.share({
         title: 'Reflex Rush',
         text: shareText,
-        url: window.location.href,
+        files: [file],
       })
     } else {
-      await navigator.clipboard.writeText(
-        `${shareText}\n${window.location.href}`
-      )
+      // Fallback download
+      const url = URL.createObjectURL(blob)
 
-      alert('Score copied to clipboard!')
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'reflex-rush-score.png'
+      a.click()
+
+      URL.revokeObjectURL(url)
+
+      alert('Image downloaded!')
     }
   } catch (error) {
-    console.error('Sharing failed:', error)
+    console.error('Share failed:', error)
   }
 }
 
