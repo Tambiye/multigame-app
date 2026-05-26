@@ -208,7 +208,9 @@ export default function ReactionGame() {
       }
     )
 
-    const shareText = `⚡ I scored ${bestScore}ms in Reflex Rush!`
+   const shareText = `⚡ I scored ${bestScore}ms in Reflex Rush!
+Can you beat my reaction speed?
+https://playcia.netlify.app/games/reaction-game`
 
     // Native share with image
     if (
@@ -216,12 +218,13 @@ export default function ReactionGame() {
       navigator.canShare({ files: [file] })
     ) {
       await navigator.share({
-        title: 'Reflex Rush',
-        text: shareText,
-        files: [file],
-      })
+  title: 'Reflex Rush',
+  text: shareText,
+  files: [file],
+})
     } else {
       // Fallback download
+      await navigator.clipboard.writeText(shareText)
       const url = URL.createObjectURL(blob)
 
       const a = document.createElement('a')
@@ -230,6 +233,7 @@ export default function ReactionGame() {
       a.click()
 
       URL.revokeObjectURL(url)
+      
 
       alert('Image downloaded!')
     }
