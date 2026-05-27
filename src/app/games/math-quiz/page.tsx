@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import "@/styles/math-quiz.css";
-import { Star,Trophy } from "lucide-react";
+import {
+  Star,
+  Trophy,
+  Share2
+} from "lucide-react";
 // ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
@@ -27,7 +31,7 @@ interface PuzzleTemplate {
 const QUESTIONS_PER_LEVEL = 10;
 const MAX_LIVES = 5;
 const LIFE_REFILL_MINUTES = 10;
-
+const STORAGE_KEY = "math-quiz-save";
 // ─────────────────────────────────────────────────────────────
 // PUZZLE BANK
 // ─────────────────────────────────────────────────────────────
@@ -135,6 +139,8 @@ export default function MathQuizPage() {
   >("");
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const shareCanvasRef =
+  useRef<HTMLCanvasElement | null>(null);
 
   const difficulty = useMemo(
     () => ({
@@ -259,10 +265,59 @@ const name = randomItem(names);
     },
     []
   );
+useEffect(() => {
+  const saved =
+    localStorage.getItem(STORAGE_KEY);
 
-  useEffect(() => {
-    generateQuestion(1, { min: 2, max: 25 });
-  }, [generateQuestion]);
+  if (saved) {
+    const data = JSON.parse(saved);
+
+    setQuestion(data.question);
+    setCorrectAnswer(data.correctAnswer);
+    setCurrentOp(data.currentOp);
+
+    setScore(data.score);
+    setLevel(data.level);
+    setQuestionCount(data.questionCount);
+
+    setLives(data.lives);
+    setLastLifeLostAt(data.lastLifeLostAt);
+
+    return;
+  }
+
+  generateQuestion(1, {
+    min: 2,
+    max: 25,
+  });
+}, [generateQuestion]);
+
+useEffect(() => {
+  if (!question) return;
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      question,
+      correctAnswer,
+      currentOp,
+      score,
+      level,
+      questionCount,
+      lives,
+      lastLifeLostAt,
+    })
+  );
+}, [
+  question,
+  correctAnswer,
+  currentOp,
+  score,
+  level,
+  questionCount,
+  lives,
+  lastLifeLostAt,
+]);
 
   const handleSubmit = useCallback(() => {
     if (!userAnswer.trim()) return;
@@ -304,7 +359,7 @@ const name = randomItem(names);
       setLastLifeLostAt(Date.now());
 
       setFeedbackType("wrong");
-      setFeedbackText(`❌ Nope! Answer was ${correctAnswer}`);
+      setFeedbackText(`❌ Nope! Try Again!`);
       setQuestionAnim("shake");
 
       setTimeout(() => {
@@ -333,7 +388,7 @@ const name = randomItem(names);
     [handleSubmit]
   );
 
-  const resetGame = useCallback(() => {
+  const resetGame = useCallback(() => { localStorage.removeItem(STORAGE_KEY);
     setScore(0);
     setLevel(1);
     setQuestionCount(0);
@@ -345,7 +400,239 @@ const name = randomItem(names);
 
     generateQuestion(1, { min: 2, max: 25 });
   }, [generateQuestion]);
+  async function handleShare() {
+  const shareText = `🧠 I scored ${score} points in Math Master!
 
+🔥 Reached Level ${level}
+📘 Solved ${questionCount} questions
+
+Can you beat my score?
+
+https://playcia.netlify.app/games/math-quiz`;
+
+  try {
+    const blob =
+      await generateShareImage();
+
+    if (!blob) return;
+
+    const file = new File(
+      [blob],
+      "math-master-score.png",
+      {
+        type: "image/png",
+      }
+    );
+
+    if (
+      navigator.share &&
+      navigator.canShare({
+        files: [file],
+      })
+    ) {
+      await navigator.share({
+        title: "Math Master",
+        text: shareText,
+        files: [file],
+      });
+    } else {
+      await navigator.clipboard.writeText(
+        shareText
+      );
+
+      setFeedbackText(
+        "📋 Share text copied!"
+      );
+
+      setFeedbackType("correct");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+async function generateShareImage() {
+  const canvas =
+    shareCanvasRef.current;
+
+  if (!canvas) return null;
+
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) return null;
+
+  canvas.width = 1200;
+  canvas.height = 630;
+
+  // Background
+  const gradient =
+    ctx.createLinearGradient(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+  gradient.addColorStop(0, "#0f172a");
+  gradient.addColorStop(1, "#1e293b");
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  // Glow
+  ctx.fillStyle =
+    "rgba(59,130,246,0.25)";
+
+  ctx.beginPath();
+  ctx.arc(250, 180, 180, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(980, 500, 220, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Title
+  ctx.textAlign = "center";
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 72px Arial";
+
+  ctx.fillText(
+    "🧠 Math Master",
+    canvas.width / 2,
+    140
+  );
+
+  // Card
+  roundRect(
+    ctx,
+    180,
+    190,
+    840,
+    260,
+    30
+  );
+
+  ctx.fillStyle =
+    "rgba(255,255,255,0.08)";
+
+  ctx.fill();
+
+  // Score
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "bold 54px Arial";
+
+  ctx.fillText(
+    `${score.toLocaleString()} Points`,
+    canvas.width / 2,
+    290
+  );
+
+  // Level
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 42px Arial";
+
+  ctx.fillText(
+    `Level ${level}`,
+    canvas.width / 2,
+    360
+  );
+
+  // Questions
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "36px Arial";
+
+  ctx.fillText(
+    `${questionCount} Questions Solved`,
+    canvas.width / 2,
+    420
+  );
+
+  // Footer
+  ctx.fillStyle = "#e2e8f0";
+  ctx.font = "bold 34px Arial";
+
+  ctx.fillText(
+    "Can you beat my math score?",
+    canvas.width / 2,
+    540
+  );
+
+  return new Promise<Blob | null>(
+    (resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/png");
+    }
+  );
+}
+
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  ctx.beginPath();
+
+  ctx.moveTo(x + radius, y);
+
+  ctx.lineTo(
+    x + width - radius,
+    y
+  );
+
+  ctx.quadraticCurveTo(
+    x + width,
+    y,
+    x + width,
+    y + radius
+  );
+
+  ctx.lineTo(
+    x + width,
+    y + height - radius
+  );
+
+  ctx.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - radius,
+    y + height
+  );
+
+  ctx.lineTo(
+    x + radius,
+    y + height
+  );
+
+  ctx.quadraticCurveTo(
+    x,
+    y + height,
+    x,
+    y + height - radius
+  );
+
+  ctx.lineTo(
+    x,
+    y + radius
+  );
+
+  ctx.quadraticCurveTo(
+    x,
+    y,
+    x + radius,
+    y
+  );
+
+  ctx.closePath();
+}
   const progressPct =
     ((questionCount % QUESTIONS_PER_LEVEL) / QUESTIONS_PER_LEVEL) * 100;
 
@@ -485,7 +772,11 @@ const name = randomItem(names);
   className="mq-input"
   autoFocus
 />
-
+  {feedbackText && (
+          <div className={`mq-feedback ${feedbackType}`}>
+            {feedbackText}
+          </div>
+        )}
         <button
           onClick={handleSubmit}
           className="mq-btn"
@@ -494,12 +785,20 @@ const name = randomItem(names);
           Answer
         </button>
 
-        {feedbackText && (
-          <div className={`mq-feedback ${feedbackType}`}>
-            {feedbackText}
-          </div>
-        )}
+      
+        <button
+  onClick={handleShare}
+  className="mq-share-btn"
+>
+  <Share2 size={18} />
+
+  <span>Share Score</span>
+</button>
       </section>
+      <canvas
+  ref={shareCanvasRef}
+  style={{ display: "none" }}
+/>
     </main>
   );
 }

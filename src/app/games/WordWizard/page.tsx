@@ -3,19 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/WordWizard.module.css";
 import englishWords from "an-array-of-english-words";
-// 
+
 import {
   WandSparkles,
   ScrollText,
   Crown,
   Sparkles,
   Flame,
-  
   Scroll,
   Feather,
   Brain,
-  Gem
+  Gem,
+  Share2
 } from "lucide-react";
+
 import { BookOpenCheck } from "lucide-react";
 
 // ─── Dictionary ───────────────────────────────────────────────────────────────
@@ -31,7 +32,6 @@ const VALID_WORDS = new Set(
 );
 
 // ─── Base words ───────────────────────────────────────────────────────────────
-// ─── Random base words ───────────────────────────────────────────────────────
 const BASE_WORDS = englishWords
   .map((w) => w.toLowerCase())
   .filter(
@@ -41,10 +41,8 @@ const BASE_WORDS = englishWords
       w.length <= 12 &&
       new Set(w).size >= 5
   );
+
 // ─── Rank tiers ───────────────────────────────────────────────────────────────
-
-
-
 const RANK_TIERS = [
   { min: 0, label: "", className: "" },
 
@@ -56,73 +54,68 @@ const RANK_TIERS = [
   },
 
   {
-    min: 20,
+    min: 30,
     label: "Lexicon Lord",
     className: "lord",
     icon: <ScrollText size={16} />
   },
 
   {
-    min: 30,
+    min: 60,
     label: "Grand Grammarian",
     className: "grammarian",
     icon: <Crown size={16} />
   },
 
   {
-    min: 40,
+    min: 100,
     label: "Linguistic Oracle",
     className: "oracle",
     icon: <Sparkles size={16} />
   },
 
   {
-    min: 50,
+    min: 150,
     label: "Transcendent Sage",
     className: "sage",
     icon: <Flame size={16} />
   },
 
- {
-  min: 60,
-  label: "Vocabulary Vanguard",
-  className: "vanguard",
-  icon: <BookOpenCheck size={16} />
-},
+  {
+    min: 220,
+    label: "Vocabulary Vanguard",
+    className: "vanguard",
+    icon: <BookOpenCheck size={16} />
+  },
 
   {
-    min: 70,
+    min: 300,
     label: "Syntax Sorcerer",
     className: "sorcerer",
     icon: <Scroll size={16} />
   },
 
   {
-    min: 80,
+    min: 400,
     label: "Phantom Poet",
     className: "poet",
     icon: <Feather size={16} />
   },
 
   {
-    min: 90,
+    min: 550,
     label: "Mythic Mindmaster",
     className: "mindmaster",
     icon: <Brain size={16} />
   },
 
   {
-    min: 100,
+    min: 750,
     label: "Ultimate Word Titan",
     className: "titan",
     icon: <Gem size={16} />
   },
 ];
-
-
-
-
-
 
 function getRank(count: number) {
   let rank = RANK_TIERS[0];
@@ -135,12 +128,12 @@ function getRank(count: number) {
 }
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
-
 function getRandomBaseWord() {
   return BASE_WORDS[
     Math.floor(Math.random() * BASE_WORDS.length)
   ];
 }
+
 function canFormWord(base: string, word: string) {
   const letters = base.toLowerCase().split("");
 
@@ -165,9 +158,10 @@ function isValidWord(base: string, word: string) {
 }
 
 export default function WordWizard() {
-  const [wordIndex, setWordIndex] = useState(0);
-const [baseWord, setBaseWord] = useState("");
+  const [baseWord, setBaseWord] = useState("");
   const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [totalWords, setTotalWords] = useState(0);
+
   const [input, setInput] = useState("");
 
   const [message, setMessage] = useState<{
@@ -184,46 +178,93 @@ const [baseWord, setBaseWord] = useState("");
   const [newChip, setNewChip] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
-useEffect(() => {
-  setBaseWord(getRandomBaseWord());
-}, []);
-  // ─── Stats ──────────────────────────────────────────────────────────────────
-  const count = foundWords.length;
 
-  const rank = getRank(count);
+  // ─── Load save ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    const saved = localStorage.getItem(
+      "wordwizard-save"
+    );
 
-  const nextMilestone =
-    Math.ceil((count + 1) / 10) * 10;
+    if (saved) {
+      const data = JSON.parse(saved);
 
-  const baseForBar =
-    Math.floor(count / 10) * 10;
+      setBaseWord(
+        data.baseWord || getRandomBaseWord()
+      );
 
-  const progressPct =
-    count === 0
-      ? 0
-      : ((count - baseForBar) / 10) * 100;
+      setFoundWords(data.foundWords || []);
 
-  const unlocked = count >= 10;
+      setTotalWords(data.totalWords || 0);
+    } else {
+      setBaseWord(getRandomBaseWord());
+    }
+  }, []);
 
-  // ─── Load next word ─────────────────────────────────────────────────────────
- function loadWord() {
-  let nextWord = getRandomBaseWord();
+  // ─── Save progress ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!baseWord) return;
 
-  while (nextWord === baseWord) {
-    nextWord = getRandomBaseWord();
+    localStorage.setItem(
+      "wordwizard-save",
+      JSON.stringify({
+        baseWord,
+        foundWords,
+        totalWords,
+      })
+    );
+  }, [baseWord, foundWords, totalWords]);
+
+  // ─── Stats ─────────────────────────────────────────────────────────────────
+  const roundCount = foundWords.length;
+
+  const rank = getRank(totalWords);
+
+ const nextRank =
+  RANK_TIERS.find(
+    (tier) => totalWords < tier.min
+  );
+
+const nextMilestone =
+  nextRank?.min ?? "MAX";
+ const currentRank =
+  [...RANK_TIERS]
+    .reverse()
+    .find((tier) => totalWords >= tier.min);
+
+const previousMin =
+  currentRank?.min ?? 0;
+
+const nextMin =
+  nextRank?.min ?? previousMin;
+
+const progressPct =
+  nextMin === previousMin
+    ? 100
+    : ((totalWords - previousMin) /
+        (nextMin - previousMin)) *
+      100;
+
+  const unlocked = roundCount >= 10;
+
+  // ─── Load next word ────────────────────────────────────────────────────────
+  function loadWord() {
+    let nextWord = getRandomBaseWord();
+
+    while (nextWord === baseWord) {
+      nextWord = getRandomBaseWord();
+    }
+
+    setBaseWord(nextWord);
+
+    setFoundWords([]);
+    setInput("");
+    setMessage(null);
+    setNewChip("");
+
+    inputRef.current?.focus();
   }
 
-  setBaseWord(nextWord);
-
-  setFoundWords([]);
-  setInput("");
-  setMessage(null);
-  setNewChip("");
-
-  inputRef.current?.focus();
-}
-
-  // ─── UI helpers ─────────────────────────────────────────────────────────────
+  // ─── UI helpers ────────────────────────────────────────────────────────────
   function showMsg(text: string, ok: boolean) {
     setMessage({ text, ok });
 
@@ -254,7 +295,295 @@ useEffect(() => {
     }, 420);
   }
 
-  // ─── Submit word ────────────────────────────────────────────────────────────
+  // ─── Share ─────────────────────────────────────────────────────────────────
+  // ─── Share Image Generator ──────────────────────────────────────────────────
+async function generateShareImage() {
+  const canvas = document.createElement("canvas");
+
+  canvas.width = 1200;
+  canvas.height = 630;
+
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) return null;
+
+  // Background
+  const gradient = ctx.createLinearGradient(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  gradient.addColorStop(0, "#0f172a");
+  gradient.addColorStop(1, "#1e293b");
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Glows
+  for (let i = 0; i < 18; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+
+    const radius =
+      Math.random() * 120 + 40;
+
+    const glow = ctx.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      radius
+    );
+
+    glow.addColorStop(
+      0,
+      "rgba(168,85,247,0.25)"
+    );
+
+    glow.addColorStop(1, "transparent");
+
+    ctx.fillStyle = glow;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x,
+      y,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+  }
+
+  // Main card
+  ctx.fillStyle = "rgba(15,23,42,0.8)";
+
+  roundRect(
+    ctx,
+    80,
+    80,
+    1040,
+    470,
+    38
+  );
+
+  ctx.fill();
+
+  // Border
+  ctx.strokeStyle =
+    "rgba(168,85,247,0.7)";
+
+  ctx.lineWidth = 5;
+
+  roundRect(
+    ctx,
+    80,
+    80,
+    1040,
+    470,
+    38
+  );
+
+  ctx.stroke();
+
+  // Stars
+  ctx.fillStyle = "rgba(255,255,255,.8)";
+
+  for (let i = 0; i < 80; i++) {
+    ctx.beginPath();
+
+    ctx.arc(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height,
+      Math.random() * 2,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+  }
+
+  // Title
+  ctx.textAlign = "center";
+
+  ctx.fillStyle = "#ffffff";
+
+  ctx.font = "bold 82px Arial";
+
+  ctx.fillText(
+    "🧙 WORD WIZARD",
+    canvas.width / 2,
+    210
+  );
+
+  // Words count
+  ctx.fillStyle = "#cbd5e1";
+
+  ctx.font = "42px Arial";
+
+  ctx.fillText(
+    `I discovered ${totalWords} words!`,
+    canvas.width / 2,
+    315
+  );
+
+  // Rank
+  ctx.fillStyle = "#a855f7";
+
+  ctx.font = "bold 54px Arial";
+
+  ctx.fillText(
+    rank.label || "Beginner",
+    canvas.width / 2,
+    405
+  );
+
+  // Footer
+  ctx.fillStyle = "#94a3b8";
+
+  ctx.font = "32px Arial";
+
+  ctx.fillText(
+    "Can you beat my vocabulary power?",
+    canvas.width / 2,
+    495
+  );
+
+  return new Promise<Blob | null>(
+    (resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/png");
+    }
+  );
+}
+
+// ─── Rounded Rectangle Helper ───────────────────────────────────────────────
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  ctx.beginPath();
+
+  ctx.moveTo(x + radius, y);
+
+  ctx.lineTo(
+    x + width - radius,
+    y
+  );
+
+  ctx.quadraticCurveTo(
+    x + width,
+    y,
+    x + width,
+    y + radius
+  );
+
+  ctx.lineTo(
+    x + width,
+    y + height - radius
+  );
+
+  ctx.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - radius,
+    y + height
+  );
+
+  ctx.lineTo(
+    x + radius,
+    y + height
+  );
+
+  ctx.quadraticCurveTo(
+    x,
+    y + height,
+    x,
+    y + height - radius
+  );
+
+  ctx.lineTo(x, y + radius);
+
+  ctx.quadraticCurveTo(
+    x,
+    y,
+    x + radius,
+    y
+  );
+
+  ctx.closePath();
+}
+
+// ─── Share ──────────────────────────────────────────────────────────────────
+async function handleShare() {
+  const imageBlob =
+    await generateShareImage();
+
+  if (!imageBlob) {
+    showToast(
+      "Couldn't generate image"
+    );
+
+    return;
+  }
+
+  const file = new File(
+    [imageBlob],
+    "wordwizard-score.png",
+    {
+      type: "image/png",
+    }
+  );
+
+  const shareText = `🧙 I discovered ${totalWords} words in Word Wizard!
+
+Can you beat my vocabulary power?
+
+http://localhost:3000/games/WordWizard`;
+
+  if (
+    navigator.canShare &&
+    navigator.canShare({
+      files: [file],
+    })
+  ) {
+    try {
+      await navigator.share({
+        title: "Word Wizard",
+        text: shareText,
+        files: [file],
+      });
+    } catch {}
+  } else {
+    const url =
+      URL.createObjectURL(imageBlob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+      "wordwizard-score.png";
+
+    a.click();
+
+    showToast(
+      "Share image downloaded!"
+    );
+  }
+}
+  // ─── Submit word ───────────────────────────────────────────────────────────
   function handleSubmit() {
     const word = input.trim().toLowerCase();
 
@@ -299,81 +628,79 @@ useEffect(() => {
     const next = [...foundWords, word];
 
     setFoundWords(next);
+
+    setTotalWords((prev) => prev + 1);
+
     setNewChip(word);
 
     showMsg(`Nice — "${word}"!`, true);
 
-  const milestones: Record<number, string> = {
-  10: "Word Wizard unlocked!",
-  20: "Lexicon Lord rises!",
-  30: "Grand Grammarian achieved!",
-  40: "Linguistic Oracle awakened!",
-  50: "Transcendent Sage reached!",
-  60: "Vocabulary Vanguard ascends!",
-  70: "Syntax Sorcerer unleashed!",
-  80: "Phantom Poet awakened!",
-  90: "Mythic Mindmaster achieved!",
-  100: "Ultimate Word Titan crowned!",
-};
+    const newTotal = totalWords + 1;
 
-    if (milestones[next.length]) {
+    const milestones: Record<number, string> = {
+      10: "Word Wizard unlocked!",
+      20: "Lexicon Lord rises!",
+      30: "Grand Grammarian achieved!",
+      40: "Linguistic Oracle awakened!",
+      50: "Transcendent Sage reached!",
+      60: "Vocabulary Vanguard ascends!",
+      70: "Syntax Sorcerer unleashed!",
+      80: "Phantom Poet awakened!",
+      90: "Mythic Mindmaster achieved!",
+      100: "Ultimate Word Titan crowned!",
+    };
+
+    if (milestones[newTotal]) {
       setTimeout(() => {
-        showToast(milestones[next.length]);
+        showToast(milestones[newTotal]);
       }, 200);
     }
   }
 
-  // ─── Next word ──────────────────────────────────────────────────────────────
-function handleNext() {
-  loadWord();
-}
+  // ─── Next word ─────────────────────────────────────────────────────────────
+  function handleNext() {
+    loadWord();
+  }
 
   return (
     <>
       <div className={styles.root}>
-        {/* <h1 className={styles.title}>
-          Word Wizard
-        </h1> */}
-
         <p className={styles.eyebrow}>
           Make words from the letters below
         </p>
 
-        
         <div className={styles.card}>
           <span className={styles.counter}>
-            {count} found
+            {roundCount} this round
           </span>
 
           <div className={styles.tiles}>
-           {baseWord &&
-  baseWord.split("").map((l, i) => (
-              <div
-                key={i}
-                className={styles.tile}
-              >
-                {l}
-              </div>
-            ))}
+            {baseWord &&
+              baseWord.split("").map((l, i) => (
+                <div
+                  key={i}
+                  className={styles.tile}
+                >
+                  {l}
+                </div>
+              ))}
           </div>
 
-         <div className={styles.rankRow}>
-  {rank.label && (
-    <span
-      className={`${styles.rankBadge} ${styles[rank.className]}`}
-    >
-      {rank.icon}
+          <div className={styles.rankRow}>
+            {rank.label && (
+              <span
+                className={`${styles.rankBadge} ${styles[rank.className]}`}
+              >
+                {rank.icon}
 
-      <span>{rank.label}</span>
-    </span>
-  )}
-</div>
+                <span>{rank.label}</span>
+              </span>
+            )}
+          </div>
 
           <div className={styles.progressMeta}>
             <span>
-              {count < 10
-                ? `${count} of 10 to unlock next word`
-                : `${count} words`}
+              {totalWords} total words discovered
             </span>
 
             <span>
@@ -462,6 +789,15 @@ function handleNext() {
               </button>
             </>
           )}
+
+          <button
+            className={styles.shareBtn}
+            onClick={handleShare}
+          >
+            <Share2 size={18} />
+
+            <span>Share Progress</span>
+          </button>
         </div>
       </div>
 
