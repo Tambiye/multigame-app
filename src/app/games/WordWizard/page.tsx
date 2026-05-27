@@ -549,7 +549,7 @@ async function handleShare() {
 
 Can you beat my vocabulary power?
 
-http://localhost:3000/games/WordWizard`;
+https://playcia.netlify.app/games/WordWizard`;
 
   if (
     navigator.canShare &&
