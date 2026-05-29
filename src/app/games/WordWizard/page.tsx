@@ -295,13 +295,11 @@ const progressPct =
     }, 420);
   }
 
-  // ─── Share ─────────────────────────────────────────────────────────────────
-  // ─── Share Image Generator ──────────────────────────────────────────────────
-async function generateShareImage() {
+  async function generateShareImage() {
   const canvas = document.createElement("canvas");
 
-  canvas.width = 1200;
-  canvas.height = 630;
+  canvas.width = 600;
+  canvas.height = 1200;
 
   const ctx = canvas.getContext("2d");
 
@@ -361,32 +359,32 @@ async function generateShareImage() {
   }
 
   // Main card
-  ctx.fillStyle = "rgba(15,23,42,0.8)";
+  ctx.fillStyle = "rgba(15,23,42,0.82)";
 
   roundRect(
     ctx,
-    80,
-    80,
-    1040,
+    65,
+    90,
     470,
-    38
+    1020,
+    14 // reduced border radius
   );
 
   ctx.fill();
 
   // Border
   ctx.strokeStyle =
-    "rgba(168,85,247,0.7)";
+    "rgba(168,85,247,0.75)";
 
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 4;
 
   roundRect(
     ctx,
-    80,
-    80,
-    1040,
+    65,
+    90,
     470,
-    38
+    1020,
+    14
   );
 
   ctx.stroke();
@@ -413,45 +411,45 @@ async function generateShareImage() {
 
   ctx.fillStyle = "#ffffff";
 
-  ctx.font = "bold 82px Arial";
+  ctx.font = "bold 48px Arial";
 
   ctx.fillText(
     "🧙 WORD WIZARD",
     canvas.width / 2,
-    210
+    280
   );
 
   // Words count
   ctx.fillStyle = "#cbd5e1";
 
-  ctx.font = "42px Arial";
+  ctx.font = "34px Arial";
 
   ctx.fillText(
     `I discovered ${totalWords} words!`,
     canvas.width / 2,
-    315
+    470
   );
 
   // Rank
   ctx.fillStyle = "#a855f7";
 
-  ctx.font = "bold 54px Arial";
+  ctx.font = "bold 64px Arial";
 
   ctx.fillText(
     rank.label || "Beginner",
     canvas.width / 2,
-    405
+    650
   );
 
   // Footer
   ctx.fillStyle = "#94a3b8";
 
-  ctx.font = "32px Arial";
+  ctx.font = "28px Arial";
 
   ctx.fillText(
     "Can you beat my vocabulary power?",
     canvas.width / 2,
-    495
+    910
   );
 
   return new Promise<Blob | null>(
@@ -462,7 +460,6 @@ async function generateShareImage() {
     }
   );
 }
-
 // ─── Rounded Rectangle Helper ───────────────────────────────────────────────
 function roundRect(
   ctx: CanvasRenderingContext2D,
