@@ -114,8 +114,7 @@ export default function ReactionGame() {
       )
     }
   }
-
-  const handleShare = async () => {
+const handleShare = async () => {
   const bestScore = leaderboard[0]?.time
 
   if (!bestScore) return
@@ -123,8 +122,9 @@ export default function ReactionGame() {
   try {
     // Create canvas
     const canvas = document.createElement('canvas')
-    canvas.width = 1200
-    canvas.height = 630
+
+    canvas.width = 700
+    canvas.height = 1230
 
     const ctx = canvas.getContext('2d')
 
@@ -142,61 +142,136 @@ export default function ReactionGame() {
     gradient.addColorStop(1, '#111827')
 
     ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // Glow circle
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    )
+
+    // Glow circles
     ctx.beginPath()
-    ctx.arc(950, 120, 180, 0, Math.PI * 2)
-    ctx.fillStyle = 'rgba(34,211,238,0.18)'
+
+    ctx.arc(
+      560,
+      180,
+      180,
+      0,
+      Math.PI * 2
+    )
+
+    ctx.fillStyle =
+      'rgba(34,211,238,0.15)'
+
     ctx.fill()
 
+    ctx.beginPath()
+
+    ctx.arc(
+      120,
+      980,
+      220,
+      0,
+      Math.PI * 2
+    )
+
+    ctx.fill()
+
+    // Main Card
+    ctx.fillStyle =
+      'rgba(17,24,39,0.82)'
+
+    ctx.roundRect(
+      70,
+      110,
+      560,
+      1010,
+      24
+    )
+
+    ctx.fill()
+
+    // Border
+    ctx.strokeStyle = '#22d3ee'
+
+    ctx.lineWidth = 4
+
+    ctx.roundRect(
+      70,
+      110,
+      560,
+      1010,
+      24
+    )
+
+    ctx.stroke()
+
     // Title
+    ctx.textAlign = 'center'
+
     ctx.fillStyle = '#ffffff'
-    ctx.font = 'bold 72px Arial'
-    ctx.fillText('⚡ Reflex Rush', 80, 140)
+
+    ctx.font = 'bold 56px Arial'
+
+    ctx.fillText(
+      '⚡ Reflex Rush',
+      canvas.width / 2,
+      260
+    )
 
     // Subtitle
     ctx.fillStyle = '#94a3b8'
-    ctx.font = '36px Arial'
+
+    ctx.font = '30px Arial'
+
     ctx.fillText(
       'Test your reaction speed',
-      80,
-      210
+      canvas.width / 2,
+      340
     )
 
-    // Score Box
-    ctx.fillStyle = '#111827'
-    ctx.strokeStyle = '#22d3ee'
-    ctx.lineWidth = 6
-
-    ctx.roundRect(80, 280, 500, 220, 30)
-    ctx.fill()
-    ctx.stroke()
-
-    // Best score label
+    // Label
     ctx.fillStyle = '#94a3b8'
-    ctx.font = '32px Arial'
-    ctx.fillText('BEST REACTION', 120, 360)
+
+    ctx.font = '28px Arial'
+
+    ctx.fillText(
+      'BEST REACTION',
+      canvas.width / 2,
+      500
+    )
 
     // Score
     ctx.fillStyle = '#22d3ee'
-    ctx.font = 'bold 110px Arial'
-    ctx.fillText(`${bestScore}ms`, 120, 460)
 
-    // Footer text
+    ctx.font = 'bold 96px Arial'
+
+    ctx.fillText(
+      `${bestScore}ms`,
+      canvas.width / 2,
+      650
+    )
+
+    // Footer
     ctx.fillStyle = '#ffffff'
-    ctx.font = 'bold 38px Arial'
+
+    ctx.font = 'bold 32px Arial'
+
     ctx.fillText(
       'Can you beat my reflexes?',
-      80,
-      570
+      canvas.width / 2,
+      930
     )
 
     // Convert canvas to blob
-    const blob: Blob | null = await new Promise(
-      (resolve) =>
-        canvas.toBlob(resolve, 'image/png')
-    )
+    const blob: Blob | null =
+      await new Promise((resolve) =>
+        canvas.toBlob(
+          resolve,
+          'image/png'
+        )
+      )
 
     if (!blob) return
 
@@ -207,7 +282,6 @@ export default function ReactionGame() {
         type: 'image/png',
       }
     )
-
    const shareText = `⚡ I scored ${bestScore}ms in Reflex Rush!
 Can you beat my reaction speed?
 https://playcia.netlify.app/games/reaction-game`

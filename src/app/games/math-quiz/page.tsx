@@ -460,8 +460,8 @@ async function generateShareImage() {
 
   if (!ctx) return null;
 
-  canvas.width = 1200;
-  canvas.height = 630;
+  canvas.width = 700;
+  canvas.height = 1230;
 
   // Background
   const gradient =
@@ -476,6 +476,7 @@ async function generateShareImage() {
   gradient.addColorStop(1, "#1e293b");
 
   ctx.fillStyle = gradient;
+
   ctx.fillRect(
     0,
     0,
@@ -483,38 +484,42 @@ async function generateShareImage() {
     canvas.height
   );
 
-  // Glow
+  // Glow effects
   ctx.fillStyle =
-    "rgba(59,130,246,0.25)";
+    "rgba(59,130,246,0.18)";
 
   ctx.beginPath();
-  ctx.arc(250, 180, 180, 0, Math.PI * 2);
-  ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(980, 500, 220, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Title
-  ctx.textAlign = "center";
-
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 72px Arial";
-
-  ctx.fillText(
-    "🧠 Math Master",
-    canvas.width / 2,
-    140
+  ctx.arc(
+    180,
+    220,
+    180,
+    0,
+    Math.PI * 2
   );
 
-  // Card
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    620,
+    950,
+    240,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+  // Main Card
   roundRect(
     ctx,
-    180,
-    190,
-    840,
-    260,
-    30
+    70,
+    110,
+    560,
+    1010,
+    24
   );
 
   ctx.fillStyle =
@@ -522,45 +527,91 @@ async function generateShareImage() {
 
   ctx.fill();
 
-  // Score
-  ctx.fillStyle = "#38bdf8";
-  ctx.font = "bold 54px Arial";
+  // Border
+  ctx.strokeStyle =
+    "rgba(56,189,248,0.5)";
+
+  ctx.lineWidth = 4;
+
+  roundRect(
+    ctx,
+    70,
+    110,
+    560,
+    1010,
+    24
+  );
+
+  ctx.stroke();
+
+  // Title
+  ctx.textAlign = "center";
+
+  ctx.fillStyle = "#ffffff";
+
+  ctx.font = "bold 52px Arial";
 
   ctx.fillText(
-    `${score.toLocaleString()} Points`,
+    "🧠 Math Master",
     canvas.width / 2,
-    290
+    260
+  );
+
+  // Score
+  ctx.fillStyle = "#38bdf8";
+
+  ctx.font = "bold 68px Arial";
+
+  ctx.fillText(
+    `${score.toLocaleString()}`,
+    canvas.width / 2,
+    470
+  );
+
+  // Points label
+  ctx.fillStyle = "#cbd5e1";
+
+  ctx.font = "38px Arial";
+
+  ctx.fillText(
+    "POINTS",
+    canvas.width / 2,
+    530
   );
 
   // Level
   ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 42px Arial";
+
+  ctx.font = "bold 46px Arial";
 
   ctx.fillText(
     `Level ${level}`,
     canvas.width / 2,
-    360
+    700
   );
 
   // Questions
   ctx.fillStyle = "#94a3b8";
-  ctx.font = "36px Arial";
+
+  ctx.font = "34px Arial";
 
   ctx.fillText(
     `${questionCount} Questions Solved`,
     canvas.width / 2,
-    420
+    790
   );
 
   // Footer
   ctx.fillStyle = "#e2e8f0";
-  ctx.font = "bold 34px Arial";
+
+  ctx.font = "bold 30px Arial";
 
   ctx.fillText(
     "Can you beat my math score?",
     canvas.width / 2,
-    540
+    980
   );
+
 
   return new Promise<Blob | null>(
     (resolve) => {
