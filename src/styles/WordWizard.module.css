@@ -939,12 +939,12 @@
 .shareBtn svg {
     width: 18px;
     height: 18px;
-
+/* 
     animation:
-        shareIconSpin 2.8s ease-in-out infinite;
+        sharecIonSpin 2.8s ease-in-out infinite; */
 }
 
-@keyframes shareIconSpin {
+/* @keyframes shareIconSpin {
 
     0%,
     100% {
@@ -966,7 +966,7 @@
         transform:
             rotate(-6deg) scale(1.08);
     }
-}
+} */
 
 /* ───────────────── RESPONSIVE ───────────────── */
 

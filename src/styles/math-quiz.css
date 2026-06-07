@@ -882,9 +882,9 @@ body {
     transform: scale(0.98);
 }
 
-.mq-share-btn svg {
+/* .mq-share-btn svg {
     animation:
-        shareSpin 4s linear infinite;
+        shareSpin 4s linear infiinte;
 }
 
 @keyframes shareSpin {
@@ -895,4 +895,4 @@ body {
     to {
         transform: rotate(360deg);
     }
-}
+} */
